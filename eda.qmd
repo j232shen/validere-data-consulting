@@ -8,49 +8,9 @@ editor: visual
 ## Load, preprocess, and clean data
 
 ```{r}
-#| label: define-functions
-
-library(quantmod)
-library(PerformanceAnalytics)
-
-# get log returns for specified ticker (15 years by default)
-load_asset <- function(ticker, from = NA, to = Sys.Date(), source = "yahoo", return_type = "log") {
-  
-  # get historical prices for ticker
-  data <- getSymbols(ticker, from = from, to = to, src = source, auto.assign = FALSE)
-
-  # get adjusted close prices
-  price_series <- Ad(data)
-
-  # calculate log returns
-  log_returns <- Return.calculate(price_series, method = "log")[-1]
-  colnames(log_returns) <- ticker
-  return(log_returns)
-}
-
-# function to load and clean asset log returns
-process_assets <- function(tickers, from = NA, to = Sys.Date()) {
-  
-  # download and merge log returns into xts object
-  returns_list <- lapply(tickers, function(tkr) load_asset(tkr, from = from))
-  merged_returns <- Reduce(function(x, y) merge(x, y, all = TRUE), returns_list) 
-  
-  # fill missing values using forward fill
-  filled_returns <- na.locf(merged_returns, na.rm = FALSE)
-  
-  # filter to start from the first row with no NAs across all columns
-  first_valid_row <- which(apply(!is.na(filled_returns), 1, all))[1]
-  if (is.na(first_valid_row)) {
-    stop("No row with complete data found across all tickers.")
-  }
-  
-  cleaned_returns <- filled_returns[first_valid_row:nrow(filled_returns), ]
-  return(cleaned_returns)
-}
-```
-
-```{r}
 #| label: process-assets
+
+source("ETL.R")
 
 # fixed asset universe
 # SPY: large cap equity (for comparison)
