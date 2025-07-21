@@ -1,0 +1,141 @@
+---
+title: "Portfolio Simulations"
+author: "Jane Shen"
+format: html
+editor: visual
+---
+
+```{r}
+#| label: setup
+
+library(PortfolioAnalytics)
+source("ETL.R")
+```
+
+## Get data
+
+```{r}
+#| label: process-assets
+
+# fixed asset universe
+# SPY: large cap equity (for comparison)
+# VTI: all public U.S. stocks
+# VXUS: most non-U.S. stocks
+# BND: broad U.S. investment-grade bonds
+# BNDX: broad non-U.S. bonds
+
+start_date <- "2013-06-05" # inception date for BNDX
+end_date <- "2025-06-30"
+
+tickers <- list(VTI = "VTI", VXUS = "VXUS", BND = "BND", BNDX = "BNDX")
+clean_returns <- process_assets(tickers, from = start_date, to = end_date) # xts object
+
+colnames(clean_returns)
+```
+
+## Optimization functions
+
+```{r}
+# optimize_portfolio <- function(returns, pspec) {
+#   # run quarterly rebalancing backtest
+#   opt.rebal <- optimize.portfolio.rebalancing(returns, pspec,
+#                                               optimize_method="CVXR",
+#                                               rebalance_on="months",
+#                                               # training_period=3 * 252, # 3 years is the default
+#                                               rolling_window=3 * 252)
+# 
+#   return(opt.rebal)
+# }
+# 
+# 
+# print_opt_summary <- function(opt.rebal) {
+#   summary_results <- summary(opt.rebal)
+#   annualized_return <- summary_results$annualized_returns 
+#   paste0("Annualized return:", annualized_return)
+# }
+# 
+# 
+# get_opt_returns <- function(returns, opt.rebal) {
+#   # extract optimal weights from optimization
+#   weights <- extractWeights(opt.rebal)
+#   weights <- weights[complete.cases(weights),]
+# 
+#   # compute optimized portfolio returns
+#   opt.returns <- Return.rebalancing(returns, weights)
+# 
+#   return(opt.returns)
+# }
+# 
+# 
+# plot_backtest <- function(opt.returns) {
+#   backtest.plot(opt.returns)
+# }
+# 
+# 
+# backtest_portfolio <- function(returns, pspec) {
+#   opt.rebal <- optimize.portfolio(returns, pspec)
+#   print_opt_summary(opt.rebal)
+#   opt.returns <- get_opt_returns(returns, opt.rebal)
+#   plot_backtest(opt.returns)
+# }
+```
+
+```{r}
+# reusable function for running portfolio simulation
+backtest_portfolio <- function(returns, pspec) {
+  opt.rebal <- optimize.portfolio.rebalancing(returns, pspec,
+                                            optimize_method="CVXR",
+                                            rebalance_on="months",
+                                            # training_period=3 * 252, # 3 years is the default
+                                            rolling_window=3 * 252)
+  
+  # extract optimal weights from regime-switching optimization  
+  weights <- extractWeights(opt.rebal)  
+  weights <- weights[complete.cases(weights),]  
+    
+  # compute optimized portfolio returns  
+  returns <- Return.rebalancing(clean_returns, weights)  
+  
+  # get annualized performance metrics  
+  summary_results <- summary(opt.rebal)  
+  annualized_return <- summary_results$annualized_returns 
+  
+  # plot backtest results
+  backtest.plot(returns)
+}
+```
+
+## Define portfolio allocations
+
+### 60/40 equities to bonds
+
+```{r}
+# create portfolio specification
+pspec_1 <- portfolio.spec(assets = colnames(clean_returns))
+
+# add full investment constraint
+pspec_1 <- add.constraint(pspec_1, type = "full_investment")
+
+# add group constraints
+pspec_1 <- add.constraint(pspec_1, type = "group",
+                          groups = list(equities = c(1, 2),  # US + global equities
+                                        bonds = c(3, 4)),    # US + global bonds
+                          group_min = c(0.58, 0.38),         # 60% equities, 40% bonds with some flexibility
+                          group_max = c(0.62, 0.42))
+
+# add nested constraints within asset class allocation
+pspec_1 <- add.constraint(pspec_1, type = "group",  
+                          groups = list(VTI = 1, VXUS = 2, BND = 3, BNDX = 4),  
+                          group_min = c(0.34, 0.22, 0.26, 0.10), 
+                          group_max = c(0.38, 0.26, 0.30, 0.14))
+
+# add objectives: maximize mean return while minimizing var
+pspec_1 <- add.objective(pspec_1, type = "return", name = "mean")  
+pspec_1 <- add.objective(pspec_1, type = "risk", name = "ES")
+
+print(pspec_1)
+```
+
+```{r}
+backtest_portfolio(clean_returns, pspec_1)
+```

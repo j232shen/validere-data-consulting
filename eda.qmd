@@ -23,7 +23,7 @@ start_date <- "2013-06-05" # inception date for BNDX
 end_date <- "2025-06-30"
 
 tickers <- list(VTI = "VTI", VXUS = "VXUS", BND = "BND", BNDX = "BNDX")
-clean_assets <- process_assets(tickers, from = start_date, to = end_date) # xts object
+clean_returns <- process_assets(tickers, from = start_date, to = end_date) # xts object
 ```
 
 ## Visualize data
@@ -32,7 +32,7 @@ clean_assets <- process_assets(tickers, from = start_date, to = end_date) # xts 
 #| label: plot-assets
 
 # plot asset universe
-plot.xts(clean_assets, multi.panel = TRUE, col = 1:4, main = "Log Returns for Fixed Asset Universe")
+plot.xts(clean_returns, multi.panel = TRUE, col = 1:4, main = "Log Returns for Fixed Asset Universe")
 ```
 
 At this point, all necessary transformations were made (log returns) and the data has been cleaned via forward-filling, although the original date range did not have any missing values.
