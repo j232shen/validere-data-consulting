@@ -13,6 +13,7 @@ library(PerformanceAnalytics)
 library(PortfolioAnalytics)
 library(CVXR)
 library(xts)
+library(zoo)
 
 source("ETL.R")
 ```
@@ -93,7 +94,7 @@ colnames(clean_returns)
 backtest_portfolio <- function(returns, pspec) {
   opt.rebal <- optimize.portfolio.rebalancing(returns, pspec,
                                               optimize_method="CVXR",
-                                              rebalance_on="quarters",
+                                              rebalance_on="months",
                                               # training_period=3 * 252, # 3 years is the default
                                               rolling_window=3 * 252)
   
@@ -122,10 +123,10 @@ dca_portfolio_simulation <- function(prices_xts, weights_xts, inflow_amount = 10
   holdings <- rep(0, n_assets)
   cash <- initial_cash
   portfolio_value <- numeric(length(dates))
-  # colnames(holdings) <- colnames(prices_xts)
-  
+
   # align prices to weights dates
   prices_xts <- prices_xts[dates, ]
+  print(range(index(prices_xts)))
   
   for (i in seq_along(dates)) {
     # add new cash inflow
@@ -134,15 +135,22 @@ dca_portfolio_simulation <- function(prices_xts, weights_xts, inflow_amount = 10
     # get prices for this date
     prices <- as.numeric(prices_xts[i, ])
     
-    # allocate cash according to weights
-    w <- as.numeric(weights_xts[i, ])
-    invest_amounts <- cash * w
-    shares_bought <- invest_amounts / prices
-    shares_bought[is.na(shares_bought)] <- 0  # handle any NA prices
-    holdings <- holdings + shares_bought
-    cash <- 0  # all cash invested
+    # # allocate cash according to weights
+    # w <- as.numeric(weights_xts[i, ])
+    # invest_amounts <- cash * w
+    # shares_bought <- invest_amounts / prices
+    # shares_bought[is.na(shares_bought)] <- 0  # handle any NA prices
+    # holdings <- holdings + shares_bought
+    # cash <- 0  # all cash invested
     
-    # update holdings for next period's returns (if not last period)
+      # FULL REBALANCING: allocate total portfolio value (holdings + new cash) according to weights
+    w <- as.numeric(weights_xts[i, ])
+    total_value <- sum(holdings * prices) + cash
+    target_value <- total_value * w
+    holdings <- target_value / prices
+    cash <- 0  # all cash invested
+      
+    # update value of holdings due to prices changes for next period's returns (if not last period)
     if (i < length(dates)) {
       next_prices <- as.numeric(prices_xts[i + 1, ])
       returns <- (next_prices - prices) / prices
@@ -158,6 +166,26 @@ dca_portfolio_simulation <- function(prices_xts, weights_xts, inflow_amount = 10
   colnames(portfolio_value_xts) <- "Portfolio.Value"
   return(portfolio_value_xts)
 }
+
+
+calculate_irr <- function(dca_portfolio, monthly_contribution = 1000) {
+  n_periods <- length(dca_portfolio)
+
+  # Construct cash flows: -1000 each month, final portfolio value as last cash flow
+  cash_flows <- rep(-monthly_contribution, n_periods)
+  cash_flows[n_periods] <- as.numeric(dca_portfolio[n_periods])  # Replace last inflow with final portfolio value
+
+  # IRR using uniroot
+  monthly_irr <- uniroot(
+    function(r) sum(cash_flows * (1 + r)^-(0:(n_periods - 1))),
+    interval = c(-0.99, 1),  # allow for negative returns
+    tol = 1e-8
+  )$root
+
+  annual_irr <- (1 + monthly_irr)^12 - 1
+
+  return(list(monthly = monthly_irr, annual = annual_irr))
+}
 ```
 
 ## Define portfolio allocations
@@ -166,69 +194,138 @@ dca_portfolio_simulation <- function(prices_xts, weights_xts, inflow_amount = 10
 
 ```{r}
 # create portfolio specification
-pspec_1 <- portfolio.spec(assets = colnames(clean_returns))
+spec_60_40 <- portfolio.spec(assets = colnames(clean_returns))
 
 # add full investment constraint
-pspec_1 <- add.constraint(pspec_1, type = "full_investment")
+spec_60_40 <- add.constraint(spec_60_40, type = "full_investment")
 
 # add group constraints
-pspec_1 <- add.constraint(pspec_1, type = "group",
-                          groups = list(equities = c(1, 2),  # US + global equities
-                                        bonds = c(3, 4)),    # US + global bonds
-                          group_min = c(0.58, 0.38),         # 60% equities, 40% bonds with some flexibility
-                          group_max = c(0.62, 0.42))
+spec_60_40 <- add.constraint(spec_60_40, type = "group",
+                             groups = list(equities = c(1, 2),  # US + global equities
+                                           bonds = c(3, 4)),    # US + global bonds
+                             group_min = c(0.58, 0.38),         # 60% equities, 40% bonds with some flexibility
+                             group_max = c(0.62, 0.42))
 
 # add nested constraints within asset class allocation
-pspec_1 <- add.constraint(pspec_1, type = "group",  
-                          groups = list(VTI = 1, VXUS = 2, BND = 3, BNDX = 4),  
-                          group_min = c(0.34, 0.22, 0.26, 0.10), 
-                          group_max = c(0.38, 0.26, 0.30, 0.14))
+spec_60_40 <- add.constraint(spec_60_40, type = "group",  
+                             groups = list(VTI = 1, VXUS = 2, BND = 3, BNDX = 4),  
+                             group_min = c(0.34, 0.22, 0.26, 0.10), 
+                             group_max = c(0.38, 0.26, 0.30, 0.14))
 
 # add objectives: maximize mean return while minimizing var
-pspec_1 <- add.objective(pspec_1, type = "return", name = "mean")  
-pspec_1 <- add.objective(pspec_1, type = "risk", name = "ES")
+spec_60_40 <- add.objective(spec_60_40, type = "return", name = "mean")  
+spec_60_40 <- add.objective(spec_60_40, type = "risk", name = "ES")
 
-results_1 <- backtest_portfolio(clean_returns, pspec_1)
+results_60_40 <- backtest_portfolio(clean_returns, spec_60_40)
 ```
 
 ```{r}
 # DCA simulation
-dca_portfolio <- dca_portfolio_simulation(clean_prices, results_1$weights, inflow_amount = 1000, initial_cash = 0)
+dca_60_40 <- dca_portfolio_simulation(clean_prices, results_60_40$weights, inflow_amount = 1000, initial_cash = 0)
 
-# plot results
-plot(dca_portfolio, main = "Portfolio Value with Dollar Cost Averaging") # , ylab = "Portfolio Value ($)")
+# plot portfolio value
+plot(dca_60_40, main = "Portfolio Value with Dollar Cost Averaging") # , ylab = "Portfolio Value ($)")
 
-# calculate DCA returns
-dca_returns <- Return.calculate(dca_portfolio)
-charts.PerformanceSummary(dca_returns, main = "DCA Portfolio Performance")
+# manually calculate drawdowns from portfolio values
+cummax_values <- cummax(dca_60_40)
+drawdowns_60_40 <- (dca_60_40 / cummax_values) - 1
+plot(drawdowns_60_40, main = "Drawdowns (DCA Portfolio)", ylab = "Drawdown (%)", xlab = "Date")
+```
+
+Sanity check:
+
+```{r}
+inflow_amount = 1000
+dca_portfolio <- dca_60_40
+weights_xts <- results_60_40$weights
+prices_xts <- clean_prices
+
+# 1. Total invested
+cat("Total invested:", inflow_amount * length(index(weights_xts)), "\n")
+
+# 2. Final portfolio value
+cat("Final portfolio value:", as.numeric(tail(dca_portfolio, 1)), "\n")
+
+# 3. Price range
+print(range(prices_xts, na.rm = TRUE))
+
+# 4. Weight range
+print(range(weights_xts, na.rm = TRUE))
+
+# 5. Any NAs or zeros in prices?
+cat("Any NAs in prices:", any(is.na(prices_xts)), "\n")
+cat("Any zeros in prices:", any(prices_xts == 0, na.rm = TRUE), "\n")
+
+# 6. Any NAs or negatives in weights?
+cat("Any NAs in weights:", any(is.na(weights_xts)), "\n")
+cat("Any negatives in weights:", any(weights_xts < 0, na.rm = TRUE), "\n")
+```
+
+```{r}
+rebalance_dates <- index(results_60_40$weights)
+
+# 2. Create a static weights matrix (same weights for all periods)
+static_weights <- matrix(
+  c(0.36, 0.24, 0.28, 0.12),  # VTI, VXUS, BND, BNDX
+  nrow = length(rebalance_dates),
+  ncol = 4,
+  byrow = TRUE
+)
+colnames(static_weights) <- c("VTI", "VXUS", "BND", "BNDX")
+static_weights_xts <- xts(static_weights, order.by = rebalance_dates)
+
+# 3. Run your DCA simulation with these static weights
+dca_static_60_40 <- dca_portfolio_simulation(clean_prices, static_weights_xts, inflow_amount = 1000, initial_cash = 0)
+
+# 4. Calculate IRR for static 60/40
+static_irr <- calculate_irr(dca_static_60_40, monthly_contribution = 1000)
+print(static_irr)
 ```
 
 ### 100% equity
 
 ```{r}
 # create portfolio specification
-pspec_2 <- portfolio.spec(assets = colnames(clean_returns)[1:2])  # only equities
+spec_full_equity <- portfolio.spec(assets = colnames(clean_returns)[1:2])  # only equities
 
 # add full investment constraint
-pspec_2 <- add.constraint(pspec_2, type = "full_investment")
+spec_full_equity <- add.constraint(spec_full_equity, type = "full_investment")
 
 # add group constraints
-pspec_2 <- add.constraint(pspec_2, type = "group",
-                          groups = list(VTI = 1, VXUS = 2),
-                          group_min = c(0.58, 0.38),  # 60% US, 40% global
-                          group_max = c(0.62, 0.42))
+spec_full_equity <- add.constraint(spec_full_equity, type = "group",
+                                   groups = list(VTI = 1, VXUS = 2),
+                                   group_min = c(0.58, 0.38),  # 60% US, 40% global
+                                   group_max = c(0.62, 0.42))
 
 # add objectives: maximize mean return while minimizing var
-pspec_2 <- add.objective(pspec_2, type = "return", name = "mean")  
-pspec_2 <- add.objective(pspec_2, type = "risk", name = "ES")
+spec_full_equity <- add.objective(spec_full_equity, type = "return", name = "mean")  
+spec_full_equity <- add.objective(spec_full_equity, type = "risk", name = "ES")
 
-results_2 <- backtest_portfolio(clean_returns, pspec_2)
+results_full_equity <- backtest_portfolio(clean_returns, spec_full_equity)
+```
+
+```{r}
+# DCA simulation
+dca_full_equity <- dca_portfolio_simulation(clean_prices, results_full_equity$weights, inflow_amount = 1000, initial_cash = 0)
+
+# plot results
+plot(dca_full_equity, main = "Portfolio Value with Dollar Cost Averaging") # , ylab = "Portfolio Value ($)")
+
+# manually calculate drawdowns from portfolio values
+cummax_values <- cummax(dca_full_equity)
+drawdowns_full_equity <- (dca_full_equity / cummax_values) - 1
+plot(drawdowns_full_equity, main = "Drawdowns (DCA Portfolio)", ylab = "Drawdown (%)", xlab = "Date")
+```
+
+```{r}
+calculate_irr(dca_60_40)
 ```
 
 ### 100% MTUM
 
 ```{r}
-MTUM_returns <- process_assets(list("MTUM"), from = start_date, to = end_date)
+# LUMP SUM INVESTMENT
+MTUM_returns <- get_all_log_returns(list("MTUM"), from = start_date, to = end_date)
 colnames(MTUM_returns)
 
 # create a weight matrix that's always 100% MTUM
@@ -240,10 +337,35 @@ colnames(mtum_weights) <- "MTUM"
 MTUM_portfolio <- Return.rebalancing(MTUM_returns, mtum_weights)
 ```
 
+```{r}
+# get the rebalancing dates from optimized portfolio
+rebalance_dates <- index(results_60_40$weights)  # weights_xts from your optimized portfolio
+
+# get adjusted close prices for MTUM and subset to rebalance dates
+mtum_prices_full <- get_all_adj_close(list("MTUM"), from = start_date, to = end_date)
+mtum_prices <- mtum_prices_full[rebalance_dates, , drop = FALSE]
+
+# weights always 1 for MTUM
+mtum_weights <- xts(matrix(1, nrow=nrow(mtum_prices), ncol=1), order.by=index(mtum_prices))
+colnames(mtum_weights) <- "MTUM"
+
+# DCA simulation
+dca_mtum <- dca_portfolio_simulation(mtum_prices, mtum_weights, inflow_amount = 1000, initial_cash = 0)
+
+# plot results
+plot(dca_mtum, main = "Portfolio Value with Dollar Cost Averaging") # , ylab = "Portfolio Value ($)")
+
+# manually calculate drawdowns from portfolio values
+cummax_values <- cummax(dca_mtum)
+drawdowns_mtum <- (dca_mtum / cummax_values) - 1
+plot(drawdowns_mtum, main = "Drawdowns (DCA Portfolio)", ylab = "Drawdown (%)", xlab = "Date")
+```
+
 ### Vanguard Target Retirement 2025 Fund
 
 ```{r}
-VTTVX_returns <- process_assets(list("VTTVX"), from = start_date, to = end_date)
+# LUMP SUM INVESTMENT
+VTTVX_returns <- get_all_log_returns(list("VTTVX"), from = start_date, to = end_date)
 colnames(VTTVX_returns)
 
 # create a weight matrix that's always 100% VTTVX
@@ -255,15 +377,69 @@ colnames(vttvx_weights) <- "VTTVX"
 VTTVX_portfolio <- Return.rebalancing(VTTVX_returns, vttvx_weights)
 ```
 
+```{r}
+# get the rebalancing dates from optimized portfolio
+rebalance_dates <- index(results_60_40$weights)  # weights_xts from your optimized portfolio
+
+# get adjusted close prices for MTUM and subset to rebalance dates
+vttvx_prices_full <- get_all_adj_close(list("VTTVX"), from = start_date, to = end_date)
+vttvx_prices <- vttvx_prices_full[rebalance_dates, , drop = FALSE]
+
+# weights always 1 for MTUM
+vttvx_weights <- xts(matrix(1, nrow=nrow(vttvx_prices), ncol=1), order.by=index(vttvx_prices))
+colnames(vttvx_weights) <- "VTTVX"
+
+# DCA simulation
+dca_vttvx <- dca_portfolio_simulation(vttvx_prices, vttvx_weights, inflow_amount = 1000, initial_cash = 0)
+
+# plot results
+plot(dca_vttvx, main = "Portfolio Value with Dollar Cost Averaging") # , ylab = "Portfolio Value ($)")
+
+# manually calculate drawdowns from portfolio values
+cummax_values <- cummax(dca_vttvx)
+drawdowns_vttvx <- (dca_vttvx / cummax_values) - 1
+plot(drawdowns_vttvx, main = "Drawdowns (DCA Portfolio)", ylab = "Drawdown (%)", xlab = "Date")
+```
+
 ## Group portfolios and simulate
 
+### Lump Sum
+
 ```{r}
-grouped_returns <- na.omit(merge(results_1$returns, 
-                                 results_2$returns, 
+grouped_returns <- na.omit(merge(results_60_40$returns, 
+                                 results_full_equity$returns, 
                                  MTUM_portfolio, 
                                  VTTVX_portfolio,
                                  all=FALSE))  # get rid of rows that don't align with the rebalancing dates
 names(grouped_returns) <- c("60/40", "100% Equity", "100% Momentum", "Vanguard Target 2025 Fund")  
 
 backtest.plot(grouped_returns)
+```
+
+### Dollar-cost Averaging (DCA)
+
+```{r}
+# Combine into a matrix for plotting
+dca_values <- merge(dca_60_40, 
+                    dca_full_equity, 
+                    dca_mtum, 
+                    dca_vttvx, 
+                    all = FALSE)
+colnames(dca_values) <- c("60/40", "100% Equity", "100% Momentum", "Vanguard Target 2025 Fund")
+
+# plot dca portfolio values
+my_colors <- c("black", "red", "green", "blue")
+my_legend <- c("60/40", "100% Equity", "100% Momentum", "Vanguard Target 2025 Fund")
+
+plot.xts(
+  dca_values,
+  main = "DCA Portfolio Values",
+  # ylab = "Portfolio Value ($)",
+  col = my_colors,
+  lwd = 2,
+  legend.loc = "topleft",
+  legend.names = my_legend,
+  major.ticks = "years",  # show major ticks by year
+  grid.col = "lightgray"  # grid color
+)
 ```
