@@ -2,7 +2,7 @@ library(quantmod)
 library(PerformanceAnalytics)
 
 # get adjusted close prices for a specified ticker (15 years by default)
-get_adj_close <- function(ticker, from = NA, to = Sys.Date(), source = "yahoo", return_type = "log") {
+get_adj_close <- function(ticker, from, to = Sys.Date(), source = "yahoo", return_type = "log") {
   
   # get historical prices for ticker
   data <- getSymbols(ticker, from = from, to = to, src = source, auto.assign = FALSE)
@@ -22,7 +22,7 @@ get_log_returns <- function(returns) {
 }
 
 
-get_all_log_returns <- function(tickers, from = NA, to = Sys.Date()) {
+get_all_log_returns <- function(tickers, from, to = Sys.Date()) {
   # get and transform each ticker's log returns in one step
   log_returns_list <- Map(function(tkr) {
     adj <- get_adj_close(tkr, from = from, to = to)

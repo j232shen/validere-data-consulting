@@ -35,7 +35,7 @@ end_date <- "2025-06-30"
 
 tickers <- list(VTI = "VTI", VXUS = "VXUS", BND = "BND", BNDX = "BNDX")
 
-# get returns and prices
+# get returns and adjusted close prices
 clean_returns <- get_all_log_returns(tickers, from = start_date, to = end_date)
 clean_prices <- get_all_adj_close(tickers, from = start_date, to = end_date)
 
@@ -116,17 +116,15 @@ backtest_portfolio <- function(returns, pspec) {
 }
 
 
-# DCA simulation function
 dca_portfolio_simulation <- function(prices_xts, weights_xts, inflow_amount = 1000, initial_cash = 0) {
   dates <- index(weights_xts)
   n_assets <- ncol(weights_xts)
   holdings <- rep(0, n_assets)
   cash <- initial_cash
   portfolio_value <- numeric(length(dates))
-
+  
   # align prices to weights dates
   prices_xts <- prices_xts[dates, ]
-  print(range(index(prices_xts)))
   
   for (i in seq_along(dates)) {
     # add new cash inflow
@@ -135,30 +133,17 @@ dca_portfolio_simulation <- function(prices_xts, weights_xts, inflow_amount = 10
     # get prices for this date
     prices <- as.numeric(prices_xts[i, ])
     
-    # # allocate cash according to weights
-    # w <- as.numeric(weights_xts[i, ])
-    # invest_amounts <- cash * w
-    # shares_bought <- invest_amounts / prices
-    # shares_bought[is.na(shares_bought)] <- 0  # handle any NA prices
-    # holdings <- holdings + shares_bought
-    # cash <- 0  # all cash invested
-    
-      # FULL REBALANCING: allocate total portfolio value (holdings + new cash) according to weights
+    # FULL REBALANCING: allocate total portfolio value according to weights
     w <- as.numeric(weights_xts[i, ])
-    total_value <- sum(holdings * prices) + cash
+    current_holdings_value <- sum(holdings * prices)
+    total_value <- current_holdings_value + cash
     target_value <- total_value * w
     holdings <- target_value / prices
+    holdings[is.na(holdings)] <- 0  # handle any NA prices
     cash <- 0  # all cash invested
-      
-    # update value of holdings due to prices changes for next period's returns (if not last period)
-    if (i < length(dates)) {
-      next_prices <- as.numeric(prices_xts[i + 1, ])
-      returns <- (next_prices - prices) / prices
-      holdings <- holdings * (1 + returns)
-    }
     
-    # calculate portfolio value
-    portfolio_value[i] <- sum(holdings * prices) + cash
+    # calculate portfolio value for this period
+    portfolio_value[i] <- sum(holdings * prices)
   }
   
   # return as xts
@@ -229,7 +214,10 @@ plot(dca_60_40, main = "Portfolio Value with Dollar Cost Averaging") # , ylab = 
 # manually calculate drawdowns from portfolio values
 cummax_values <- cummax(dca_60_40)
 drawdowns_60_40 <- (dca_60_40 / cummax_values) - 1
-plot(drawdowns_60_40, main = "Drawdowns (DCA Portfolio)", ylab = "Drawdown (%)", xlab = "Date")
+plot(drawdowns_60_40, main = "Drawdowns (DCA Portfolio)", ylab = "Drawdown", xlab = "Date")
+
+# calculate IRR (money-adjusted return)
+calculate_irr(dca_60_40)
 ```
 
 Sanity check:
@@ -261,7 +249,10 @@ cat("Any NAs in weights:", any(is.na(weights_xts)), "\n")
 cat("Any negatives in weights:", any(weights_xts < 0, na.rm = TRUE), "\n")
 ```
 
+Compare to static weights
+
 ```{r}
+# static weights matrix (no rebalancing) for comparison
 rebalance_dates <- index(results_60_40$weights)
 
 # 2. Create a static weights matrix (same weights for all periods)
@@ -274,12 +265,9 @@ static_weights <- matrix(
 colnames(static_weights) <- c("VTI", "VXUS", "BND", "BNDX")
 static_weights_xts <- xts(static_weights, order.by = rebalance_dates)
 
-# 3. Run your DCA simulation with these static weights
 dca_static_60_40 <- dca_portfolio_simulation(clean_prices, static_weights_xts, inflow_amount = 1000, initial_cash = 0)
 
-# 4. Calculate IRR for static 60/40
-static_irr <- calculate_irr(dca_static_60_40, monthly_contribution = 1000)
-print(static_irr)
+calculate_irr(dca_static_60_40, monthly_contribution = 1000)
 ```
 
 ### 100% equity
@@ -306,7 +294,8 @@ results_full_equity <- backtest_portfolio(clean_returns, spec_full_equity)
 
 ```{r}
 # DCA simulation
-dca_full_equity <- dca_portfolio_simulation(clean_prices, results_full_equity$weights, inflow_amount = 1000, initial_cash = 0)
+equity_prices <- clean_prices[, c("VTI", "VXUS")]  # subset equity prices
+dca_full_equity <- dca_portfolio_simulation(equity_prices, results_full_equity$weights, inflow_amount = 1000, initial_cash = 0)
 
 # plot results
 plot(dca_full_equity, main = "Portfolio Value with Dollar Cost Averaging") # , ylab = "Portfolio Value ($)")
@@ -314,11 +303,41 @@ plot(dca_full_equity, main = "Portfolio Value with Dollar Cost Averaging") # , y
 # manually calculate drawdowns from portfolio values
 cummax_values <- cummax(dca_full_equity)
 drawdowns_full_equity <- (dca_full_equity / cummax_values) - 1
-plot(drawdowns_full_equity, main = "Drawdowns (DCA Portfolio)", ylab = "Drawdown (%)", xlab = "Date")
+plot(drawdowns_full_equity, main = "Drawdowns (DCA Portfolio)", ylab = "Drawdown", xlab = "Date")
+
+# calculate IRR (money-adjusted return)
+calculate_irr(dca_full_equity)
 ```
 
+Compare to static weights
+
 ```{r}
-calculate_irr(dca_60_40)
+# Static weights matrix for 100% equity comparison
+equity_rebalance_dates <- index(results_full_equity$weights)
+
+# Create static weights matrix (60% VTI, 40% VXUS - same for all periods)
+static_equity_weights <- matrix(
+  c(0.6, 0.4),  # VTI, VXUS
+  nrow = length(equity_rebalance_dates),
+  ncol = 2,
+  byrow = TRUE
+)
+colnames(static_equity_weights) <- c("VTI", "VXUS")
+static_equity_weights_xts <- xts(static_equity_weights, order.by = equity_rebalance_dates)
+
+# Run DCA simulation with static weights
+dca_static_equity <- dca_portfolio_simulation(clean_prices[, c("VTI", "VXUS")], 
+                                            static_equity_weights_xts, 
+                                            inflow_amount = 1000, initial_cash = 0)
+
+# Calculate IRR for static allocation
+irr_static_equity <- calculate_irr(dca_static_equity, monthly_contribution = 1000)
+print("Static 60/40 Equity IRR:")
+print(irr_static_equity)
+
+# Compare with optimized version
+print("Optimized Equity IRR:")
+print(calculate_irr(dca_full_equity, monthly_contribution = 1000))
 ```
 
 ### 100% MTUM
@@ -358,7 +377,10 @@ plot(dca_mtum, main = "Portfolio Value with Dollar Cost Averaging") # , ylab = "
 # manually calculate drawdowns from portfolio values
 cummax_values <- cummax(dca_mtum)
 drawdowns_mtum <- (dca_mtum / cummax_values) - 1
-plot(drawdowns_mtum, main = "Drawdowns (DCA Portfolio)", ylab = "Drawdown (%)", xlab = "Date")
+plot(drawdowns_mtum, main = "Drawdowns (DCA Portfolio)", ylab = "Drawdown", xlab = "Date")
+
+# calculate IRR (money-adjusted return)
+calculate_irr(dca_mtum)
 ```
 
 ### Vanguard Target Retirement 2025 Fund
@@ -398,7 +420,10 @@ plot(dca_vttvx, main = "Portfolio Value with Dollar Cost Averaging") # , ylab = 
 # manually calculate drawdowns from portfolio values
 cummax_values <- cummax(dca_vttvx)
 drawdowns_vttvx <- (dca_vttvx / cummax_values) - 1
-plot(drawdowns_vttvx, main = "Drawdowns (DCA Portfolio)", ylab = "Drawdown (%)", xlab = "Date")
+plot(drawdowns_vttvx, main = "Drawdowns (DCA Portfolio)", ylab = "Drawdown", xlab = "Date")
+
+# calculate IRR (money-adjusted return)
+calculate_irr(dca_vttvx)
 ```
 
 ## Group portfolios and simulate
@@ -419,27 +444,56 @@ backtest.plot(grouped_returns)
 ### Dollar-cost Averaging (DCA)
 
 ```{r}
-# Combine into a matrix for plotting
-dca_values <- merge(dca_60_40, 
-                    dca_full_equity, 
-                    dca_mtum, 
-                    dca_vttvx, 
-                    all = FALSE)
-colnames(dca_values) <- c("60/40", "100% Equity", "100% Momentum", "Vanguard Target 2025 Fund")
-
-# plot dca portfolio values
+# set up plotting parameters
 my_colors <- c("black", "red", "green", "blue")
 my_legend <- c("60/40", "100% Equity", "100% Momentum", "Vanguard Target 2025 Fund")
 
+# combine portfolio values
+portfolio_values <- merge(dca_60_40, 
+                         dca_full_equity, 
+                         dca_mtum, 
+                         dca_vttvx, 
+                         all = FALSE)
+colnames(portfolio_values) <- my_legend
+
+# combine drawdowns
+portfolio_drawdowns <- merge(drawdowns_60_40, 
+                            drawdowns_full_equity, 
+                            drawdowns_mtum, 
+                            drawdowns_vttvx, 
+                            all = FALSE)
+colnames(portfolio_drawdowns) <- my_legend
+
+# subplot layout
+par(mfrow = c(2, 1), mar = c(3, 4, 3, 2))
+
+# top plot: Portfolio Values
 plot.xts(
-  dca_values,
+  portfolio_values,
   main = "DCA Portfolio Values",
   # ylab = "Portfolio Value ($)",
   col = my_colors,
   lwd = 2,
   legend.loc = "topleft",
   legend.names = my_legend,
-  major.ticks = "years",  # show major ticks by year
-  grid.col = "lightgray"  # grid color
+  major.ticks = "years",
+  grid.col = "lightgray"
 )
+
+# bottom plot: drawdowns
+plot.xts(
+  portfolio_drawdowns * 100,  # Convert to percentage
+  main = "Portfolio Drawdowns",
+  ylab = "Drawdown (%)",
+  xlab = "Date",
+  col = my_colors,
+  lwd = 2,
+  major.ticks = "years",
+  grid.col = "lightgray"
+)
+
+# reset plotting parameters
+par(mfrow = c(1, 1), mar = c(5, 4, 4, 2))
 ```
+
+## Risk-adjusted returns?
