@@ -11,6 +11,8 @@ editor: visual
 library(quantmod)
 library(PerformanceAnalytics)
 library(PortfolioAnalytics)
+library(CVXR)
+library(xts)
 
 source("ETL.R")
 ```
@@ -31,7 +33,10 @@ start_date <- "2013-06-05" # inception date for BNDX
 end_date <- "2025-06-30"
 
 tickers <- list(VTI = "VTI", VXUS = "VXUS", BND = "BND", BNDX = "BNDX")
-clean_returns <- process_assets(tickers, from = start_date, to = end_date) # xts object
+
+# get returns and prices
+clean_returns <- get_all_log_returns(tickers, from = start_date, to = end_date)
+clean_prices <- get_all_adj_close(tickers, from = start_date, to = end_date)
 
 colnames(clean_returns)
 ```
@@ -88,7 +93,7 @@ colnames(clean_returns)
 backtest_portfolio <- function(returns, pspec) {
   opt.rebal <- optimize.portfolio.rebalancing(returns, pspec,
                                               optimize_method="CVXR",
-                                              rebalance_on="months",
+                                              rebalance_on="quarters",
                                               # training_period=3 * 252, # 3 years is the default
                                               rolling_window=3 * 252)
   
@@ -97,7 +102,7 @@ backtest_portfolio <- function(returns, pspec) {
   weights <- weights[complete.cases(weights),]  
     
   # compute optimized portfolio returns  
-  returns <- Return.rebalancing(clean_returns, weights)  
+  returns <- Return.rebalancing(clean_returns, weights)  # rebalancing covered by weights object
   
   # get annualized performance metrics  
   summary_results <- summary(opt.rebal)  
@@ -107,6 +112,51 @@ backtest_portfolio <- function(returns, pspec) {
   # backtest.plot(returns)
   
   return(list(weights = weights, returns = returns))
+}
+
+
+# DCA simulation function
+dca_portfolio_simulation <- function(prices_xts, weights_xts, inflow_amount = 1000, initial_cash = 0) {
+  dates <- index(weights_xts)
+  n_assets <- ncol(weights_xts)
+  holdings <- rep(0, n_assets)
+  cash <- initial_cash
+  portfolio_value <- numeric(length(dates))
+  # colnames(holdings) <- colnames(prices_xts)
+  
+  # align prices to weights dates
+  prices_xts <- prices_xts[dates, ]
+  
+  for (i in seq_along(dates)) {
+    # add new cash inflow
+    cash <- cash + inflow_amount
+    
+    # get prices for this date
+    prices <- as.numeric(prices_xts[i, ])
+    
+    # allocate cash according to weights
+    w <- as.numeric(weights_xts[i, ])
+    invest_amounts <- cash * w
+    shares_bought <- invest_amounts / prices
+    shares_bought[is.na(shares_bought)] <- 0  # handle any NA prices
+    holdings <- holdings + shares_bought
+    cash <- 0  # all cash invested
+    
+    # update holdings for next period's returns (if not last period)
+    if (i < length(dates)) {
+      next_prices <- as.numeric(prices_xts[i + 1, ])
+      returns <- (next_prices - prices) / prices
+      holdings <- holdings * (1 + returns)
+    }
+    
+    # calculate portfolio value
+    portfolio_value[i] <- sum(holdings * prices) + cash
+  }
+  
+  # return as xts
+  portfolio_value_xts <- xts(portfolio_value, order.by = dates)
+  colnames(portfolio_value_xts) <- "Portfolio.Value"
+  return(portfolio_value_xts)
 }
 ```
 
@@ -139,6 +189,18 @@ pspec_1 <- add.objective(pspec_1, type = "return", name = "mean")
 pspec_1 <- add.objective(pspec_1, type = "risk", name = "ES")
 
 results_1 <- backtest_portfolio(clean_returns, pspec_1)
+```
+
+```{r}
+# DCA simulation
+dca_portfolio <- dca_portfolio_simulation(clean_prices, results_1$weights, inflow_amount = 1000, initial_cash = 0)
+
+# plot results
+plot(dca_portfolio, main = "Portfolio Value with Dollar Cost Averaging") # , ylab = "Portfolio Value ($)")
+
+# calculate DCA returns
+dca_returns <- Return.calculate(dca_portfolio)
+charts.PerformanceSummary(dca_returns, main = "DCA Portfolio Performance")
 ```
 
 ### 100% equity

@@ -22,7 +22,7 @@ get_log_returns <- function(returns) {
 }
 
 
-process_assets <- function(tickers, from = NA, to = Sys.Date()) {
+get_all_log_returns <- function(tickers, from = NA, to = Sys.Date()) {
   # get and transform each ticker's log returns in one step
   log_returns_list <- Map(function(tkr) {
     adj <- get_adj_close(tkr, from = from, to = to)

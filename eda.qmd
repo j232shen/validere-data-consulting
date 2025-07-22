@@ -23,7 +23,7 @@ start_date <- "2013-06-05" # inception date for BNDX
 end_date <- "2025-06-30"
 
 tickers <- list(VTI = "VTI", VXUS = "VXUS", BND = "BND", BNDX = "BNDX")
-clean_returns <- process_assets(tickers, from = start_date, to = end_date) # xts object
+clean_returns <- get_all_log_returns(tickers, from = start_date, to = end_date) # xts object
 ```
 
 ## Visualize data
