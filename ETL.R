@@ -23,7 +23,6 @@ get_log_returns <- function(returns) {
 
 
 process_assets <- function(tickers, from = NA, to = Sys.Date()) {
-  
   # get and transform each ticker's log returns in one step
   log_returns_list <- Map(function(tkr) {
     adj <- get_adj_close(tkr, from = from, to = to)
@@ -46,4 +45,26 @@ process_assets <- function(tickers, from = NA, to = Sys.Date()) {
   
   cleaned_returns <- filled_returns[first_valid_row:nrow(filled_returns), ]
   return(cleaned_returns)
+}
+
+
+# helper: get adjusted close prices for all tickers as a single xts object
+get_all_adj_close <- function(tickers, from, to) {
+  price_list <- lapply(tickers, function(tkr) {
+    adj <- get_adj_close(tkr, from = from, to = to)
+    colnames(adj) <- tkr
+    return(adj)
+  })
+  
+  merged_prices <- Reduce(function(x, y) merge(x, y, all = TRUE), price_list)
+  
+  # forward fill missing values
+  filled_prices <- na.locf(merged_prices, na.rm = FALSE)
+  
+  # filter to start from first row with no NAs
+  first_valid_row <- which(apply(!is.na(filled_prices), 1, all))[1]
+  if (is.na(first_valid_row)) stop("No row with complete data found across all tickers.")
+  cleaned_prices <- filled_prices[first_valid_row:nrow(filled_prices), ]
+  
+  return(cleaned_prices)
 }
