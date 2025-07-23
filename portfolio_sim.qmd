@@ -156,9 +156,9 @@ dca_portfolio_simulation <- function(prices_xts, weights_xts, inflow_amount = 10
 calculate_irr <- function(dca_portfolio, monthly_contribution = 1000) {
   n_periods <- length(dca_portfolio)
 
-  # Construct cash flows: -1000 each month, final portfolio value as last cash flow
+  # construct cash flows: -1000 each month, final portfolio value as last cash flow
   cash_flows <- rep(-monthly_contribution, n_periods)
-  cash_flows[n_periods] <- as.numeric(dca_portfolio[n_periods])  # Replace last inflow with final portfolio value
+  cash_flows[n_periods] <- as.numeric(dca_portfolio[n_periods])  # replace last inflow with final portfolio value
 
   # IRR using uniroot
   monthly_irr <- uniroot(
@@ -174,6 +174,10 @@ calculate_irr <- function(dca_portfolio, monthly_contribution = 1000) {
 ```
 
 ## Define portfolio allocations
+
+```{r}
+cf = 3000  # monthly cash inflow
+```
 
 ### 60/40 equities to bonds
 
@@ -206,7 +210,7 @@ results_60_40 <- backtest_portfolio(clean_returns, spec_60_40)
 
 ```{r}
 # DCA simulation
-dca_60_40 <- dca_portfolio_simulation(clean_prices, results_60_40$weights, inflow_amount = 1000, initial_cash = 0)
+dca_60_40 <- dca_portfolio_simulation(clean_prices, results_60_40$weights, inflow_amount = cf, initial_cash = 0)
 
 # plot portfolio value
 plot(dca_60_40, main = "Portfolio Value with Dollar Cost Averaging") # , ylab = "Portfolio Value ($)")
@@ -217,13 +221,14 @@ drawdowns_60_40 <- (dca_60_40 / cummax_values) - 1
 plot(drawdowns_60_40, main = "Drawdowns (DCA Portfolio)", ylab = "Drawdown", xlab = "Date")
 
 # calculate IRR (money-adjusted return)
-calculate_irr(dca_60_40)
+irr_60_40 <- calculate_irr(dca_60_40, monthly_contribution = cf)
+print(irr_60_40)
 ```
 
 Sanity check:
 
 ```{r}
-inflow_amount = 1000
+inflow_amount = cf
 dca_portfolio <- dca_60_40
 weights_xts <- results_60_40$weights
 prices_xts <- clean_prices
@@ -255,7 +260,6 @@ Compare to static weights
 # static weights matrix (no rebalancing) for comparison
 rebalance_dates <- index(results_60_40$weights)
 
-# 2. Create a static weights matrix (same weights for all periods)
 static_weights <- matrix(
   c(0.36, 0.24, 0.28, 0.12),  # VTI, VXUS, BND, BNDX
   nrow = length(rebalance_dates),
@@ -265,9 +269,10 @@ static_weights <- matrix(
 colnames(static_weights) <- c("VTI", "VXUS", "BND", "BNDX")
 static_weights_xts <- xts(static_weights, order.by = rebalance_dates)
 
-dca_static_60_40 <- dca_portfolio_simulation(clean_prices, static_weights_xts, inflow_amount = 1000, initial_cash = 0)
+dca_static_60_40 <- dca_portfolio_simulation(clean_prices, static_weights_xts, inflow_amount = cf, initial_cash = 0)
 
-calculate_irr(dca_static_60_40, monthly_contribution = 1000)
+# compare IRR
+calculate_irr(dca_static_60_40, monthly_contribution = cf)
 ```
 
 ### 100% equity
@@ -295,7 +300,7 @@ results_full_equity <- backtest_portfolio(clean_returns, spec_full_equity)
 ```{r}
 # DCA simulation
 equity_prices <- clean_prices[, c("VTI", "VXUS")]  # subset equity prices
-dca_full_equity <- dca_portfolio_simulation(equity_prices, results_full_equity$weights, inflow_amount = 1000, initial_cash = 0)
+dca_full_equity <- dca_portfolio_simulation(equity_prices, results_full_equity$weights, inflow_amount = cf, initial_cash = 0)
 
 # plot results
 plot(dca_full_equity, main = "Portfolio Value with Dollar Cost Averaging") # , ylab = "Portfolio Value ($)")
@@ -306,16 +311,17 @@ drawdowns_full_equity <- (dca_full_equity / cummax_values) - 1
 plot(drawdowns_full_equity, main = "Drawdowns (DCA Portfolio)", ylab = "Drawdown", xlab = "Date")
 
 # calculate IRR (money-adjusted return)
-calculate_irr(dca_full_equity)
+irr_full_equity <- calculate_irr(dca_full_equity, monthly_contribution = cf)
+print(irr_full_equity)
 ```
 
 Compare to static weights
 
 ```{r}
-# Static weights matrix for 100% equity comparison
+# static weights matrix for 100% equity comparison
 equity_rebalance_dates <- index(results_full_equity$weights)
 
-# Create static weights matrix (60% VTI, 40% VXUS - same for all periods)
+# sreate static weights matrix (60% VTI, 40% VXUS - same for all periods)
 static_equity_weights <- matrix(
   c(0.6, 0.4),  # VTI, VXUS
   nrow = length(equity_rebalance_dates),
@@ -325,19 +331,18 @@ static_equity_weights <- matrix(
 colnames(static_equity_weights) <- c("VTI", "VXUS")
 static_equity_weights_xts <- xts(static_equity_weights, order.by = equity_rebalance_dates)
 
-# Run DCA simulation with static weights
+# run DCA simulation with static weights
 dca_static_equity <- dca_portfolio_simulation(clean_prices[, c("VTI", "VXUS")], 
                                             static_equity_weights_xts, 
-                                            inflow_amount = 1000, initial_cash = 0)
+                                            inflow_amount = cf, initial_cash = 0)
 
-# Calculate IRR for static allocation
-irr_static_equity <- calculate_irr(dca_static_equity, monthly_contribution = 1000)
+# calculate IRR for static allocation
 print("Static 60/40 Equity IRR:")
-print(irr_static_equity)
+calculate_irr(dca_static_equity, monthly_contribution = cf)
 
 # Compare with optimized version
 print("Optimized Equity IRR:")
-print(calculate_irr(dca_full_equity, monthly_contribution = 1000))
+calculate_irr(dca_full_equity, monthly_contribution = cf)
 ```
 
 ### 100% MTUM
@@ -369,7 +374,7 @@ mtum_weights <- xts(matrix(1, nrow=nrow(mtum_prices), ncol=1), order.by=index(mt
 colnames(mtum_weights) <- "MTUM"
 
 # DCA simulation
-dca_mtum <- dca_portfolio_simulation(mtum_prices, mtum_weights, inflow_amount = 1000, initial_cash = 0)
+dca_mtum <- dca_portfolio_simulation(mtum_prices, mtum_weights, inflow_amount = cf, initial_cash = 0)
 
 # plot results
 plot(dca_mtum, main = "Portfolio Value with Dollar Cost Averaging") # , ylab = "Portfolio Value ($)")
@@ -380,7 +385,8 @@ drawdowns_mtum <- (dca_mtum / cummax_values) - 1
 plot(drawdowns_mtum, main = "Drawdowns (DCA Portfolio)", ylab = "Drawdown", xlab = "Date")
 
 # calculate IRR (money-adjusted return)
-calculate_irr(dca_mtum)
+irr_mtum <- calculate_irr(dca_mtum, monthly_contribution = cf)
+print(irr_mtum)
 ```
 
 ### Vanguard Target Retirement 2025 Fund
@@ -412,7 +418,7 @@ vttvx_weights <- xts(matrix(1, nrow=nrow(vttvx_prices), ncol=1), order.by=index(
 colnames(vttvx_weights) <- "VTTVX"
 
 # DCA simulation
-dca_vttvx <- dca_portfolio_simulation(vttvx_prices, vttvx_weights, inflow_amount = 1000, initial_cash = 0)
+dca_vttvx <- dca_portfolio_simulation(vttvx_prices, vttvx_weights, inflow_amount = cf, initial_cash = 0)
 
 # plot results
 plot(dca_vttvx, main = "Portfolio Value with Dollar Cost Averaging") # , ylab = "Portfolio Value ($)")
@@ -423,7 +429,8 @@ drawdowns_vttvx <- (dca_vttvx / cummax_values) - 1
 plot(drawdowns_vttvx, main = "Drawdowns (DCA Portfolio)", ylab = "Drawdown", xlab = "Date")
 
 # calculate IRR (money-adjusted return)
-calculate_irr(dca_vttvx)
+irr_vttvx <- calculate_irr(dca_vttvx, monthly_contribution = cf)
+print(irr_vttvx)
 ```
 
 ## Group portfolios and simulate
@@ -496,4 +503,142 @@ plot.xts(
 par(mfrow = c(1, 1), mar = c(5, 4, 4, 2))
 ```
 
-## Risk-adjusted returns?
+## Risk metrics
+
+```{r}
+# function to calculate maximum drawdown
+calculate_max_drawdown <- function(portfolio_values) {
+  cummax_values <- cummax(portfolio_values)
+  drawdowns <- (portfolio_values / cummax_values) - 1
+  max_dd <- min(drawdowns, na.rm = TRUE)
+  return(max_dd)
+}
+
+# function to calculate portfolio volatility (annualized)
+calculate_portfolio_volatility <- function(portfolio_values, frequency = 12) {
+  # calculate log returns from portfolio values
+  log_returns <- diff(log(portfolio_values))
+  # annualized volatility
+  volatility <- sd(log_returns, na.rm = TRUE) * sqrt(frequency)
+  return(volatility)
+}
+
+# function to calculate modified Sharpe ratio for DCA
+calculate_modified_sharpe <- function(irr, portfolio_values, risk_free_rate = 0.03) {
+  excess_return <- irr - risk_free_rate
+  volatility <- calculate_portfolio_volatility(portfolio_values)
+  sharpe <- excess_return / volatility
+  return(sharpe)
+}
+
+# function to calculate Sortino ratio for DCA
+calculate_sortino_ratio <- function(irr, portfolio_values, risk_free_rate = 0.03) {
+  # calculate monthly returns from portfolio values
+  returns <- diff(log(portfolio_values))
+  # downside deviation (only negative returns)
+  negative_returns <- returns[returns < 0]
+  if(length(negative_returns) == 0) {
+    downside_deviation <- 0
+  } else {
+    downside_deviation <- sd(negative_returns, na.rm = TRUE) * sqrt(12)  # annualized
+  }
+  
+  excess_return <- irr - risk_free_rate
+  if(downside_deviation == 0) {
+    sortino <- Inf  # perfect - no downside
+  } else {
+    sortino <- excess_return / downside_deviation
+  }
+  return(sortino)
+}
+
+# function to calculate time spent in drawdown
+calculate_time_in_drawdown <- function(portfolio_values) {
+  cummax_values <- cummax(portfolio_values)
+  drawdowns <- (portfolio_values / cummax_values) - 1
+  time_in_dd <- mean(drawdowns < -0.001, na.rm = TRUE)  # allow for small rounding errors
+  return(time_in_dd)
+}
+
+# function to calculate average drawdown when in drawdown
+calculate_average_drawdown <- function(portfolio_values) {
+  cummax_values <- cummax(portfolio_values)
+  drawdowns <- (portfolio_values / cummax_values) - 1
+  drawdown_periods <- drawdowns[drawdowns < -0.001]  # only periods in drawdown
+  
+  if(length(drawdown_periods) == 0) {
+    avg_dd <- 0
+  } else {
+    avg_dd <- mean(drawdown_periods, na.rm = TRUE)
+  }
+  return(avg_dd)
+}
+
+# function to calculate Calmar ratio (IRR / abs(Max Drawdown))
+calculate_calmar_ratio <- function(irr, portfolio_values) {
+  max_dd <- abs(calculate_max_drawdown(portfolio_values))
+  if(max_dd == 0) {
+    calmar <- Inf
+  } else {
+    calmar <- irr / max_dd
+  }
+  return(calmar)
+}
+
+# comprehensive risk analysis function
+analyze_dca_risk <- function(portfolio_values, irr, risk_free_rate = 0.03, strategy_name = "Portfolio") {
+  
+  risk_metrics <- list(
+    strategy = strategy_name,
+    irr = irr,
+    max_drawdown = calculate_max_drawdown(portfolio_values),
+    volatility = calculate_portfolio_volatility(portfolio_values),
+    modified_sharpe = calculate_modified_sharpe(irr, portfolio_values, risk_free_rate),
+    sortino_ratio = calculate_sortino_ratio(irr, portfolio_values, risk_free_rate),
+    time_in_drawdown = calculate_time_in_drawdown(portfolio_values),
+    avg_drawdown = calculate_average_drawdown(portfolio_values),
+    calmar_ratio = calculate_calmar_ratio(irr, portfolio_values)
+  )
+  
+  return(risk_metrics)
+}
+
+# function to create risk comparison table
+create_risk_comparison <- function(portfolio_list, irr_list, strategy_names, risk_free_rate = 0.03) {
+  
+  risk_results <- list()
+  
+  for(i in seq_along(portfolio_list)) {
+    risk_results[[i]] <- analyze_dca_risk(
+      portfolio_list[[i]], 
+      irr_list[[i]], 
+      risk_free_rate, 
+      strategy_names[i]
+    )
+  }
+  
+  # convert to data frame
+  risk_df <- data.frame(
+    Strategy = sapply(risk_results, function(x) x$strategy),
+    IRR = round(sapply(risk_results, function(x) x$irr) * 100, 2),
+    Max_Drawdown_pct = round(sapply(risk_results, function(x) x$max_drawdown) * 100, 2),
+    Volatility_pct = round(sapply(risk_results, function(x) x$volatility) * 100, 2),
+    Modified_Sharpe = round(sapply(risk_results, function(x) x$modified_sharpe), 3),
+    Sortino_Ratio = round(sapply(risk_results, function(x) x$sortino_ratio), 3),
+    Time_in_DD_pct = round(sapply(risk_results, function(x) x$time_in_drawdown) * 100, 1),
+    Avg_DD_pct = round(sapply(risk_results, function(x) x$avg_drawdown) * 100, 2),
+    Calmar_Ratio = round(sapply(risk_results, function(x) x$calmar_ratio), 3)
+  )
+  
+  return(risk_df)
+}
+
+
+# compare all your strategies
+portfolios <- list(dca_60_40, dca_full_equity, dca_mtum, dca_vttvx)
+irrs <- list(irr_60_40$annual, irr_full_equity$annual, irr_mtum$annual, irr_vttvx$annual)
+names <- c("60/40", "100% Equity", "100% Momentum", "Vanguard Target 2025")
+
+risk_table <- create_risk_comparison(portfolios, irrs, names)
+print(risk_table)
+```
