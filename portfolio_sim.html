@@ -8,7 +8,7 @@
 
 <meta name="author" content="Jane Shen">
 
-<title>Portfolio Simulations</title>
+<title>Mom-and-pop Investment Strategies: Simulation &amp; Evaluation</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -80,7 +80,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Portfolio Simulations</h1>
+<h1 class="title">Mom-and-pop Investment Strategies: Simulation &amp; Evaluation</h1>
 </div>
 
 
@@ -118,23 +118,22 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"ETL.R"</span>)</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># fixed asset universe</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co"># SPY: large cap equity (for comparison)</span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="co"># VTI: all public U.S. stocks</span></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co"># VXUS: most non-U.S. stocks</span></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="co"># BND: broad U.S. investment-grade bonds</span></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="co"># BNDX: broad non-U.S. bonds</span></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>start_date <span class="ot">&lt;-</span> <span class="st">"2013-06-05"</span> <span class="co"># inception date for BNDX</span></span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>end_date <span class="ot">&lt;-</span> <span class="st">"2025-06-30"</span></span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>tickers <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">VTI =</span> <span class="st">"VTI"</span>, <span class="at">VXUS =</span> <span class="st">"VXUS"</span>, <span class="at">BND =</span> <span class="st">"BND"</span>, <span class="at">BNDX =</span> <span class="st">"BNDX"</span>)</span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a><span class="co"># get returns and adjusted close prices</span></span>
-<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>clean_returns <span class="ot">&lt;-</span> <span class="fu">get_all_log_returns</span>(tickers, <span class="at">from =</span> start_date, <span class="at">to =</span> end_date)</span>
-<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>clean_prices <span class="ot">&lt;-</span> <span class="fu">get_all_adj_close</span>(tickers, <span class="at">from =</span> start_date, <span class="at">to =</span> end_date)</span>
-<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a><span class="co"># check column names</span></span>
-<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(clean_returns)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co"># VTI: all public U.S. stocks</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="co"># VXUS: most non-U.S. stocks</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co"># BND: broad U.S. investment-grade bonds</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="co"># BNDX: broad non-U.S. bonds</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>start_date <span class="ot">&lt;-</span> <span class="st">"2013-06-05"</span> <span class="co"># inception date for BNDX</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>end_date <span class="ot">&lt;-</span> <span class="st">"2025-06-30"</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>tickers <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">VTI =</span> <span class="st">"VTI"</span>, <span class="at">VXUS =</span> <span class="st">"VXUS"</span>, <span class="at">BND =</span> <span class="st">"BND"</span>, <span class="at">BNDX =</span> <span class="st">"BNDX"</span>)</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="co"># get returns and adjusted close prices</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>clean_returns <span class="ot">&lt;-</span> <span class="fu">get_all_log_returns</span>(tickers, <span class="at">from =</span> start_date, <span class="at">to =</span> end_date)</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>clean_prices <span class="ot">&lt;-</span> <span class="fu">get_all_adj_close</span>(tickers, <span class="at">from =</span> start_date, <span class="at">to =</span> end_date)</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a><span class="co"># check column names</span></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(clean_returns)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "VTI"  "VXUS" "BND"  "BNDX"</code></pre>
 </div>
@@ -179,169 +178,146 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>spec_60_40 <span class="ot">&lt;-</span> <span class="fu">add.objective</span>(spec_60_40, <span class="at">type =</span> <span class="st">"risk"</span>, <span class="at">name =</span> <span class="st">"ES"</span>)</span>
 <span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a><span class="co"># run optmization</span></span>
-<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>results_60_40 <span class="ot">&lt;-</span> <span class="fu">backtest_portfolio</span>(clean_returns, spec_60_40)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>results_60_40 <span class="ot">&lt;-</span> <span class="fu">optimize_portfolio</span>(clean_returns, spec_60_40)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning: executing %dopar% sequentially: no parallel backend registered</code></pre>
 </div>
 </div>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># DCA simulation</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>dca_60_40 <span class="ot">&lt;-</span> <span class="fu">dca_portfolio_simulation</span>(clean_prices, results_60_40<span class="sc">$</span>weights, <span class="at">inflow_amount =</span> cf, <span class="at">initial_cash =</span> <span class="dv">0</span>)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>dca_60_40 <span class="ot">&lt;-</span> <span class="fu">simulate_dca</span>(clean_prices, results_60_40<span class="sc">$</span>weights, <span class="at">inflow_amount =</span> cf, <span class="at">initial_cash =</span> <span class="dv">0</span>)</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co"># plot portfolio value</span></span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(dca_60_40, <span class="at">main =</span> <span class="st">"Portfolio Value with Dollar Cost Averaging"</span>) <span class="co"># , ylab = "Portfolio Value ($)")</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="portfolio_sim_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># manually calculate drawdowns from portfolio values</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>drawdowns_60_40 <span class="ot">&lt;-</span> <span class="fu">calculate_drawdowns</span>(dca_60_40)</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(drawdowns_60_40, <span class="at">main =</span> <span class="st">"Drawdowns (DCA Portfolio)"</span>, <span class="at">ylab =</span> <span class="st">"Drawdown"</span>, <span class="at">xlab =</span> <span class="st">"Date"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="portfolio_sim_files/figure-html/unnamed-chunk-5-2.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># calculate IRR (money-adjusted return)</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>irr_60_40 <span class="ot">&lt;-</span> <span class="fu">calculate_irr</span>(dca_60_40, <span class="at">monthly_contribution =</span> cf)</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(irr_60_40)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="co"># plot(dca_60_40, main = "Portfolio Value with Dollar Cost Averaging") # , ylab = "Portfolio Value ($)")</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="co"># manually calculate drawdowns from portfolio values</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>drawdowns_60_40 <span class="ot">&lt;-</span> <span class="fu">calculate_drawdowns</span>(dca_60_40)</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="co"># plot(drawdowns_60_40, main = "Drawdowns (DCA Portfolio)", ylab = "Drawdown", xlab = "Date")</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="co"># calculate IRR (money-adjusted return)</span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>irr_60_40 <span class="ot">&lt;-</span> <span class="fu">calculate_irr</span>(dca_60_40, <span class="at">monthly_contribution =</span> cf)</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(irr_60_40)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>$monthly
-[1] 0.006244471
+[1] 0.006244478
 
 $annual
-[1] 0.07756154</code></pre>
+[1] 0.07756163</code></pre>
 </div>
 </div>
 <p>Sanity check:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>inflow_amount <span class="ot">=</span> cf</span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>dca_portfolio <span class="ot">&lt;-</span> dca_60_40</span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>weights_xts <span class="ot">&lt;-</span> results_60_40<span class="sc">$</span>weights</span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>prices_xts <span class="ot">&lt;-</span> clean_prices</span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. Total invested</span></span>
-<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Total invested:"</span>, inflow_amount <span class="sc">*</span> <span class="fu">length</span>(<span class="fu">index</span>(weights_xts)), <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>inflow_amount <span class="ot">=</span> cf</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>dca_portfolio <span class="ot">&lt;-</span> dca_60_40</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>weights_xts <span class="ot">&lt;-</span> results_60_40<span class="sc">$</span>weights</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>prices_xts <span class="ot">&lt;-</span> clean_prices</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. Total invested</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Total invested:"</span>, inflow_amount <span class="sc">*</span> <span class="fu">length</span>(<span class="fu">index</span>(weights_xts)), <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Total invested: 327000 </code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. Final portfolio value</span></span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Final portfolio value:"</span>, <span class="fu">as.numeric</span>(<span class="fu">tail</span>(dca_portfolio, <span class="dv">1</span>)), <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. Final portfolio value</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Final portfolio value:"</span>, <span class="fu">as.numeric</span>(<span class="fu">tail</span>(dca_portfolio, <span class="dv">1</span>)), <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Final portfolio value: 463483.1 </code></pre>
+<pre><code>Final portfolio value: 463483.3 </code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. Price range</span></span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">range</span>(prices_xts, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. Price range</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">range</span>(prices_xts, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1]  29.96859 302.39700</code></pre>
+<pre><code>[1]  29.96857 302.39700</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 4. Weight range</span></span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">range</span>(weights_xts, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 4. Weight range</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">range</span>(weights_xts, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 0.09999823 0.38000392</code></pre>
+<pre><code>[1] 0.09999785 0.38000400</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 5. Any NAs or zeros in prices?</span></span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Any NAs in prices:"</span>, <span class="fu">any</span>(<span class="fu">is.na</span>(prices_xts)), <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 5. Any NAs or zeros in prices?</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Any NAs in prices:"</span>, <span class="fu">any</span>(<span class="fu">is.na</span>(prices_xts)), <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Any NAs in prices: FALSE </code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Any zeros in prices:"</span>, <span class="fu">any</span>(prices_xts <span class="sc">==</span> <span class="dv">0</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Any zeros in prices:"</span>, <span class="fu">any</span>(prices_xts <span class="sc">==</span> <span class="dv">0</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Any zeros in prices: FALSE </code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 6. Any NAs or negatives in weights?</span></span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Any NAs in weights:"</span>, <span class="fu">any</span>(<span class="fu">is.na</span>(weights_xts)), <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 6. Any NAs or negatives in weights?</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Any NAs in weights:"</span>, <span class="fu">any</span>(<span class="fu">is.na</span>(weights_xts)), <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Any NAs in weights: FALSE </code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Any negatives in weights:"</span>, <span class="fu">any</span>(weights_xts <span class="sc">&lt;</span> <span class="dv">0</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Any negatives in weights:"</span>, <span class="fu">any</span>(weights_xts <span class="sc">&lt;</span> <span class="dv">0</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Any negatives in weights: FALSE </code></pre>
 </div>
 </div>
 <p>Compare to static weights</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># static weights matrix (no rebalancing) for comparison</span></span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>rebalance_dates <span class="ot">&lt;-</span> <span class="fu">index</span>(results_60_40<span class="sc">$</span>weights)</span>
-<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>static_weights <span class="ot">&lt;-</span> <span class="fu">matrix</span>(</span>
-<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="fl">0.36</span>, <span class="fl">0.24</span>, <span class="fl">0.28</span>, <span class="fl">0.12</span>),  <span class="co"># VTI, VXUS, BND, BNDX</span></span>
-<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">nrow =</span> <span class="fu">length</span>(rebalance_dates),</span>
-<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">ncol =</span> <span class="dv">4</span>,</span>
-<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">byrow =</span> <span class="cn">TRUE</span></span>
-<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(static_weights) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"VTI"</span>, <span class="st">"VXUS"</span>, <span class="st">"BND"</span>, <span class="st">"BNDX"</span>)</span>
-<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a>static_weights_xts <span class="ot">&lt;-</span> <span class="fu">xts</span>(static_weights, <span class="at">order.by =</span> rebalance_dates)</span>
-<span id="cb27-12"><a href="#cb27-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-13"><a href="#cb27-13" aria-hidden="true" tabindex="-1"></a>dca_static_60_40 <span class="ot">&lt;-</span> <span class="fu">dca_portfolio_simulation</span>(clean_prices, static_weights_xts, <span class="at">inflow_amount =</span> cf, <span class="at">initial_cash =</span> <span class="dv">0</span>)</span>
-<span id="cb27-14"><a href="#cb27-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-15"><a href="#cb27-15" aria-hidden="true" tabindex="-1"></a><span class="co"># compare IRR</span></span>
-<span id="cb27-16"><a href="#cb27-16" aria-hidden="true" tabindex="-1"></a><span class="fu">calculate_irr</span>(dca_static_60_40, <span class="at">monthly_contribution =</span> cf)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># static weights matrix (no rebalancing) for comparison</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>rebalance_dates <span class="ot">&lt;-</span> <span class="fu">index</span>(results_60_40<span class="sc">$</span>weights)</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>static_weights <span class="ot">&lt;-</span> <span class="fu">matrix</span>(</span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="fl">0.36</span>, <span class="fl">0.24</span>, <span class="fl">0.28</span>, <span class="fl">0.12</span>),  <span class="co"># VTI, VXUS, BND, BNDX</span></span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">nrow =</span> <span class="fu">length</span>(rebalance_dates),</span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">ncol =</span> <span class="dv">4</span>,</span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">byrow =</span> <span class="cn">TRUE</span></span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(static_weights) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"VTI"</span>, <span class="st">"VXUS"</span>, <span class="st">"BND"</span>, <span class="st">"BNDX"</span>)</span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a>static_weights_xts <span class="ot">&lt;-</span> <span class="fu">xts</span>(static_weights, <span class="at">order.by =</span> rebalance_dates)</span>
+<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a>dca_static_60_40 <span class="ot">&lt;-</span> <span class="fu">simulate_dca</span>(clean_prices, static_weights_xts, <span class="at">inflow_amount =</span> cf, <span class="at">initial_cash =</span> <span class="dv">0</span>)</span>
+<span id="cb25-14"><a href="#cb25-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-15"><a href="#cb25-15" aria-hidden="true" tabindex="-1"></a><span class="co"># compare IRR</span></span>
+<span id="cb25-16"><a href="#cb25-16" aria-hidden="true" tabindex="-1"></a><span class="fu">calculate_irr</span>(dca_static_60_40, <span class="at">monthly_contribution =</span> cf)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>$monthly
-[1] 0.006301483
+[1] 0.006301484
 
 $annual
-[1] 0.07829441</code></pre>
+[1] 0.07829442</code></pre>
 </div>
 </div>
 </section>
 <section id="equity" class="level3">
 <h3 class="anchored" data-anchor-id="equity">100% equity</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co"># create portfolio specification</span></span>
-<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>spec_full_equity <span class="ot">&lt;-</span> <span class="fu">portfolio.spec</span>(<span class="at">assets =</span> <span class="fu">colnames</span>(clean_returns)[<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>])  <span class="co"># only equities</span></span>
-<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a><span class="co"># add full investment constraint</span></span>
-<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>spec_full_equity <span class="ot">&lt;-</span> <span class="fu">add.constraint</span>(spec_full_equity, <span class="at">type =</span> <span class="st">"full_investment"</span>)</span>
-<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a><span class="co"># add group constraints</span></span>
-<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a>spec_full_equity <span class="ot">&lt;-</span> <span class="fu">add.constraint</span>(spec_full_equity, <span class="at">type =</span> <span class="st">"group"</span>,</span>
-<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a>                                   <span class="at">groups =</span> <span class="fu">list</span>(<span class="at">VTI =</span> <span class="dv">1</span>, <span class="at">VXUS =</span> <span class="dv">2</span>),</span>
-<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a>                                   <span class="at">group_min =</span> <span class="fu">c</span>(<span class="fl">0.58</span>, <span class="fl">0.38</span>),  <span class="co"># 60% US, 40% global</span></span>
-<span id="cb29-11"><a href="#cb29-11" aria-hidden="true" tabindex="-1"></a>                                   <span class="at">group_max =</span> <span class="fu">c</span>(<span class="fl">0.62</span>, <span class="fl">0.42</span>))</span>
-<span id="cb29-12"><a href="#cb29-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-13"><a href="#cb29-13" aria-hidden="true" tabindex="-1"></a><span class="co"># add objectives: maximize mean return while minimizing var</span></span>
-<span id="cb29-14"><a href="#cb29-14" aria-hidden="true" tabindex="-1"></a>spec_full_equity <span class="ot">&lt;-</span> <span class="fu">add.objective</span>(spec_full_equity, <span class="at">type =</span> <span class="st">"return"</span>, <span class="at">name =</span> <span class="st">"mean"</span>)  </span>
-<span id="cb29-15"><a href="#cb29-15" aria-hidden="true" tabindex="-1"></a>spec_full_equity <span class="ot">&lt;-</span> <span class="fu">add.objective</span>(spec_full_equity, <span class="at">type =</span> <span class="st">"risk"</span>, <span class="at">name =</span> <span class="st">"ES"</span>)</span>
-<span id="cb29-16"><a href="#cb29-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-17"><a href="#cb29-17" aria-hidden="true" tabindex="-1"></a>results_full_equity <span class="ot">&lt;-</span> <span class="fu">backtest_portfolio</span>(clean_returns, spec_full_equity)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># create portfolio specification</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>spec_full_equity <span class="ot">&lt;-</span> <span class="fu">portfolio.spec</span>(<span class="at">assets =</span> <span class="fu">colnames</span>(clean_returns)[<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>])  <span class="co"># only equities</span></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a><span class="co"># add full investment constraint</span></span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>spec_full_equity <span class="ot">&lt;-</span> <span class="fu">add.constraint</span>(spec_full_equity, <span class="at">type =</span> <span class="st">"full_investment"</span>)</span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a><span class="co"># add group constraints</span></span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>spec_full_equity <span class="ot">&lt;-</span> <span class="fu">add.constraint</span>(spec_full_equity, <span class="at">type =</span> <span class="st">"group"</span>,</span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a>                                   <span class="at">groups =</span> <span class="fu">list</span>(<span class="at">VTI =</span> <span class="dv">1</span>, <span class="at">VXUS =</span> <span class="dv">2</span>),</span>
+<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a>                                   <span class="at">group_min =</span> <span class="fu">c</span>(<span class="fl">0.58</span>, <span class="fl">0.38</span>),  <span class="co"># 60% US, 40% global</span></span>
+<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a>                                   <span class="at">group_max =</span> <span class="fu">c</span>(<span class="fl">0.62</span>, <span class="fl">0.42</span>))</span>
+<span id="cb27-12"><a href="#cb27-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-13"><a href="#cb27-13" aria-hidden="true" tabindex="-1"></a><span class="co"># add objectives: maximize mean return while minimizing var</span></span>
+<span id="cb27-14"><a href="#cb27-14" aria-hidden="true" tabindex="-1"></a>spec_full_equity <span class="ot">&lt;-</span> <span class="fu">add.objective</span>(spec_full_equity, <span class="at">type =</span> <span class="st">"return"</span>, <span class="at">name =</span> <span class="st">"mean"</span>)  </span>
+<span id="cb27-15"><a href="#cb27-15" aria-hidden="true" tabindex="-1"></a>spec_full_equity <span class="ot">&lt;-</span> <span class="fu">add.objective</span>(spec_full_equity, <span class="at">type =</span> <span class="st">"risk"</span>, <span class="at">name =</span> <span class="st">"ES"</span>)</span>
+<span id="cb27-16"><a href="#cb27-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-17"><a href="#cb27-17" aria-hidden="true" tabindex="-1"></a><span class="co"># run optmization</span></span>
+<span id="cb27-18"><a href="#cb27-18" aria-hidden="true" tabindex="-1"></a>results_full_equity <span class="ot">&lt;-</span> <span class="fu">optimize_portfolio</span>(clean_returns, spec_full_equity)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># DCA simulation</span></span>
-<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>equity_prices <span class="ot">&lt;-</span> clean_prices[, <span class="fu">c</span>(<span class="st">"VTI"</span>, <span class="st">"VXUS"</span>)]  <span class="co"># subset equity prices</span></span>
-<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>dca_full_equity <span class="ot">&lt;-</span> <span class="fu">dca_portfolio_simulation</span>(equity_prices, results_full_equity<span class="sc">$</span>weights, <span class="at">inflow_amount =</span> cf, <span class="at">initial_cash =</span> <span class="dv">0</span>)</span>
-<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a><span class="co"># plot results</span></span>
-<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(dca_full_equity, <span class="at">main =</span> <span class="st">"Portfolio Value with Dollar Cost Averaging"</span>) <span class="co"># , ylab = "Portfolio Value ($)")</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="portfolio_sim_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="co"># manually calculate drawdowns from portfolio values</span></span>
-<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>drawdowns_full_equity <span class="ot">&lt;-</span> <span class="fu">calculate_drawdowns</span>(dca_full_equity)</span>
-<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(drawdowns_full_equity, <span class="at">main =</span> <span class="st">"Drawdowns (DCA Portfolio)"</span>, <span class="at">ylab =</span> <span class="st">"Drawdown"</span>, <span class="at">xlab =</span> <span class="st">"Date"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="portfolio_sim_files/figure-html/unnamed-chunk-9-2.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="co"># calculate IRR (money-adjusted return)</span></span>
-<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>irr_full_equity <span class="ot">&lt;-</span> <span class="fu">calculate_irr</span>(dca_full_equity, <span class="at">monthly_contribution =</span> cf)</span>
-<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(irr_full_equity)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># DCA simulation</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>equity_prices <span class="ot">&lt;-</span> clean_prices[, <span class="fu">c</span>(<span class="st">"VTI"</span>, <span class="st">"VXUS"</span>)]  <span class="co"># subset equity prices</span></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>dca_full_equity <span class="ot">&lt;-</span> <span class="fu">simulate_dca</span>(equity_prices, results_full_equity<span class="sc">$</span>weights, <span class="at">inflow_amount =</span> cf, <span class="at">initial_cash =</span> <span class="dv">0</span>)</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a><span class="co"># plot results</span></span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a><span class="co"># plot(dca_full_equity, main = "Portfolio Value with Dollar Cost Averaging") # , ylab = "Portfolio Value ($)")</span></span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a><span class="co"># manually calculate drawdowns from portfolio values</span></span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a>drawdowns_full_equity <span class="ot">&lt;-</span> <span class="fu">calculate_drawdowns</span>(dca_full_equity)</span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a><span class="co"># plot(drawdowns_full_equity, main = "Drawdowns (DCA Portfolio)", ylab = "Drawdown", xlab = "Date")</span></span>
+<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a><span class="co"># calculate IRR (money-adjusted return)</span></span>
+<span id="cb28-13"><a href="#cb28-13" aria-hidden="true" tabindex="-1"></a>irr_full_equity <span class="ot">&lt;-</span> <span class="fu">calculate_irr</span>(dca_full_equity, <span class="at">monthly_contribution =</span> cf)</span>
+<span id="cb28-14"><a href="#cb28-14" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(irr_full_equity)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>$monthly
-[1] 0.009417486
+[1] 0.009417487
 
 $annual
 [1] 0.119051</code></pre>
@@ -349,30 +325,30 @@ $annual
 </div>
 <p>Compare to static weights</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="co"># static weights matrix for 100% equity comparison</span></span>
-<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>equity_rebalance_dates <span class="ot">&lt;-</span> <span class="fu">index</span>(results_full_equity<span class="sc">$</span>weights)</span>
-<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a><span class="co"># sreate static weights matrix (60% VTI, 40% VXUS - same for all periods)</span></span>
-<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>static_equity_weights <span class="ot">&lt;-</span> <span class="fu">matrix</span>(</span>
-<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="fl">0.6</span>, <span class="fl">0.4</span>),  <span class="co"># VTI, VXUS</span></span>
-<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">nrow =</span> <span class="fu">length</span>(equity_rebalance_dates),</span>
-<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">ncol =</span> <span class="dv">2</span>,</span>
-<span id="cb34-9"><a href="#cb34-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">byrow =</span> <span class="cn">TRUE</span></span>
-<span id="cb34-10"><a href="#cb34-10" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb34-11"><a href="#cb34-11" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(static_equity_weights) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"VTI"</span>, <span class="st">"VXUS"</span>)</span>
-<span id="cb34-12"><a href="#cb34-12" aria-hidden="true" tabindex="-1"></a>static_equity_weights_xts <span class="ot">&lt;-</span> <span class="fu">xts</span>(static_equity_weights, <span class="at">order.by =</span> equity_rebalance_dates)</span>
-<span id="cb34-13"><a href="#cb34-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-14"><a href="#cb34-14" aria-hidden="true" tabindex="-1"></a><span class="co"># run DCA simulation with static weights</span></span>
-<span id="cb34-15"><a href="#cb34-15" aria-hidden="true" tabindex="-1"></a>dca_static_equity <span class="ot">&lt;-</span> <span class="fu">dca_portfolio_simulation</span>(clean_prices[, <span class="fu">c</span>(<span class="st">"VTI"</span>, <span class="st">"VXUS"</span>)], </span>
-<span id="cb34-16"><a href="#cb34-16" aria-hidden="true" tabindex="-1"></a>                                            static_equity_weights_xts, </span>
-<span id="cb34-17"><a href="#cb34-17" aria-hidden="true" tabindex="-1"></a>                                            <span class="at">inflow_amount =</span> cf, <span class="at">initial_cash =</span> <span class="dv">0</span>)</span>
-<span id="cb34-18"><a href="#cb34-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-19"><a href="#cb34-19" aria-hidden="true" tabindex="-1"></a><span class="co"># calculate IRR for static allocation</span></span>
-<span id="cb34-20"><a href="#cb34-20" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">"Static 60/40 Equity IRR:"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># static weights matrix for 100% equity comparison</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>equity_rebalance_dates <span class="ot">&lt;-</span> <span class="fu">index</span>(results_full_equity<span class="sc">$</span>weights)</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a><span class="co"># create static weights matrix (60% VTI, 40% VXUS - same for all periods)</span></span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>static_equity_weights <span class="ot">&lt;-</span> <span class="fu">matrix</span>(</span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="fl">0.6</span>, <span class="fl">0.4</span>),  <span class="co"># VTI, VXUS</span></span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">nrow =</span> <span class="fu">length</span>(equity_rebalance_dates),</span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">ncol =</span> <span class="dv">2</span>,</span>
+<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">byrow =</span> <span class="cn">TRUE</span></span>
+<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb30-11"><a href="#cb30-11" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(static_equity_weights) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"VTI"</span>, <span class="st">"VXUS"</span>)</span>
+<span id="cb30-12"><a href="#cb30-12" aria-hidden="true" tabindex="-1"></a>static_equity_weights_xts <span class="ot">&lt;-</span> <span class="fu">xts</span>(static_equity_weights, <span class="at">order.by =</span> equity_rebalance_dates)</span>
+<span id="cb30-13"><a href="#cb30-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-14"><a href="#cb30-14" aria-hidden="true" tabindex="-1"></a><span class="co"># run DCA simulation with static weights</span></span>
+<span id="cb30-15"><a href="#cb30-15" aria-hidden="true" tabindex="-1"></a>dca_static_equity <span class="ot">&lt;-</span> <span class="fu">simulate_dca</span>(clean_prices[, <span class="fu">c</span>(<span class="st">"VTI"</span>, <span class="st">"VXUS"</span>)], </span>
+<span id="cb30-16"><a href="#cb30-16" aria-hidden="true" tabindex="-1"></a>                                            static_equity_weights_xts, </span>
+<span id="cb30-17"><a href="#cb30-17" aria-hidden="true" tabindex="-1"></a>                                            <span class="at">inflow_amount =</span> cf, <span class="at">initial_cash =</span> <span class="dv">0</span>)</span>
+<span id="cb30-18"><a href="#cb30-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-19"><a href="#cb30-19" aria-hidden="true" tabindex="-1"></a><span class="co"># calculate IRR for static allocation</span></span>
+<span id="cb30-20"><a href="#cb30-20" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">"Static Full Equity IRR:"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] "Static 60/40 Equity IRR:"</code></pre>
+<pre><code>[1] "Static Full Equity IRR:"</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">calculate_irr</span>(dca_static_equity, <span class="at">monthly_contribution =</span> cf)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">calculate_irr</span>(dca_static_equity, <span class="at">monthly_contribution =</span> cf)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>$monthly
 [1] 0.00935283
@@ -380,15 +356,15 @@ $annual
 $annual
 [1] 0.1181912</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Compare with optimized version</span></span>
-<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">"Optimized Equity IRR:"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Compare with optimized version</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">"Optimized Full Equity IRR:"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] "Optimized Equity IRR:"</code></pre>
+<pre><code>[1] "Optimized Full Equity IRR:"</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">calculate_irr</span>(dca_full_equity, <span class="at">monthly_contribution =</span> cf)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">calculate_irr</span>(dca_full_equity, <span class="at">monthly_contribution =</span> cf)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>$monthly
-[1] 0.009417486
+[1] 0.009417487
 
 $annual
 [1] 0.119051</code></pre>
@@ -398,57 +374,45 @@ $annual
 <section id="mtum" class="level3">
 <h3 class="anchored" data-anchor-id="mtum">100% MTUM</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="co"># LUMP SUM INVESTMENT</span></span>
-<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>MTUM_returns <span class="ot">&lt;-</span> <span class="fu">get_all_log_returns</span>(<span class="fu">list</span>(<span class="st">"MTUM"</span>), <span class="at">from =</span> start_date, <span class="at">to =</span> end_date)</span>
-<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(MTUM_returns)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="co"># LUMP SUM INVESTMENT</span></span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>MTUM_returns <span class="ot">&lt;-</span> <span class="fu">get_all_log_returns</span>(<span class="fu">list</span>(<span class="st">"MTUM"</span>), <span class="at">from =</span> start_date, <span class="at">to =</span> end_date)</span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(MTUM_returns)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "MTUM"</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="co"># create a weight matrix that's always 100% MTUM</span></span>
-<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>mtum_dates <span class="ot">&lt;-</span> <span class="fu">index</span>(MTUM_returns)  </span>
-<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>mtum_weights <span class="ot">&lt;-</span> <span class="fu">xts</span>(<span class="fu">matrix</span>(<span class="dv">1</span>, <span class="at">nrow=</span><span class="fu">length</span>(mtum_dates), <span class="at">ncol=</span><span class="dv">1</span>), <span class="at">order.by=</span>mtum_dates)  </span>
-<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(mtum_weights) <span class="ot">&lt;-</span> <span class="st">"MTUM"</span>  </span>
-<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb44-6"><a href="#cb44-6" aria-hidden="true" tabindex="-1"></a><span class="co"># get "rebalanced" returns for consistency</span></span>
-<span id="cb44-7"><a href="#cb44-7" aria-hidden="true" tabindex="-1"></a>MTUM_portfolio <span class="ot">&lt;-</span> <span class="fu">Return.rebalancing</span>(MTUM_returns, mtum_weights)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="co"># create a weight matrix that's always 100% MTUM</span></span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>mtum_dates <span class="ot">&lt;-</span> <span class="fu">index</span>(MTUM_returns)  </span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>mtum_weights <span class="ot">&lt;-</span> <span class="fu">xts</span>(<span class="fu">matrix</span>(<span class="dv">1</span>, <span class="at">nrow=</span><span class="fu">length</span>(mtum_dates), <span class="at">ncol=</span><span class="dv">1</span>), <span class="at">order.by=</span>mtum_dates)  </span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(mtum_weights) <span class="ot">&lt;-</span> <span class="st">"MTUM"</span>  </span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a><span class="co"># get "rebalanced" returns for consistency</span></span>
+<span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a>MTUM_portfolio <span class="ot">&lt;-</span> <span class="fu">Return.rebalancing</span>(MTUM_returns, mtum_weights)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="co"># get the rebalancing dates from optimized portfolio</span></span>
-<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>rebalance_dates <span class="ot">&lt;-</span> <span class="fu">index</span>(results_60_40<span class="sc">$</span>weights)  <span class="co"># weights_xts from your optimized portfolio</span></span>
-<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a><span class="co"># get adjusted close prices for MTUM and subset to rebalance dates</span></span>
-<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a>mtum_prices_full <span class="ot">&lt;-</span> <span class="fu">get_all_adj_close</span>(<span class="fu">list</span>(<span class="st">"MTUM"</span>), <span class="at">from =</span> start_date, <span class="at">to =</span> end_date)</span>
-<span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a>mtum_prices <span class="ot">&lt;-</span> mtum_prices_full[rebalance_dates, <span class="st">"MTUM"</span>, drop <span class="ot">=</span> <span class="cn">FALSE</span>]</span>
-<span id="cb45-7"><a href="#cb45-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-8"><a href="#cb45-8" aria-hidden="true" tabindex="-1"></a><span class="co"># weights always 1 for MTUM</span></span>
-<span id="cb45-9"><a href="#cb45-9" aria-hidden="true" tabindex="-1"></a>mtum_weights <span class="ot">&lt;-</span> <span class="fu">xts</span>(<span class="fu">matrix</span>(<span class="dv">1</span>, <span class="at">nrow=</span><span class="fu">nrow</span>(mtum_prices), <span class="at">ncol=</span><span class="dv">1</span>), <span class="at">order.by=</span><span class="fu">index</span>(mtum_prices))</span>
-<span id="cb45-10"><a href="#cb45-10" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(mtum_weights) <span class="ot">&lt;-</span> <span class="st">"MTUM"</span></span>
-<span id="cb45-11"><a href="#cb45-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-12"><a href="#cb45-12" aria-hidden="true" tabindex="-1"></a><span class="co"># DCA simulation</span></span>
-<span id="cb45-13"><a href="#cb45-13" aria-hidden="true" tabindex="-1"></a>dca_mtum <span class="ot">&lt;-</span> <span class="fu">dca_portfolio_simulation</span>(mtum_prices, mtum_weights, <span class="at">inflow_amount =</span> cf, <span class="at">initial_cash =</span> <span class="dv">0</span>)</span>
-<span id="cb45-14"><a href="#cb45-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-15"><a href="#cb45-15" aria-hidden="true" tabindex="-1"></a><span class="co"># plot results</span></span>
-<span id="cb45-16"><a href="#cb45-16" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(dca_mtum, <span class="at">main =</span> <span class="st">"Portfolio Value with Dollar Cost Averaging"</span>) <span class="co"># , ylab = "Portfolio Value ($)")</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="portfolio_sim_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="co"># manually calculate drawdowns from portfolio values</span></span>
-<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>drawdowns_mtum <span class="ot">&lt;-</span> <span class="fu">calculate_drawdowns</span>(dca_mtum)</span>
-<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(drawdowns_mtum, <span class="at">main =</span> <span class="st">"Drawdowns (DCA Portfolio)"</span>, <span class="at">ylab =</span> <span class="st">"Drawdown"</span>, <span class="at">xlab =</span> <span class="st">"Date"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="portfolio_sim_files/figure-html/unnamed-chunk-12-2.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="co"># calculate IRR (money-adjusted return)</span></span>
-<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>irr_mtum <span class="ot">&lt;-</span> <span class="fu">calculate_irr</span>(dca_mtum, <span class="at">monthly_contribution =</span> cf)</span>
-<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(irr_mtum)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="co"># get the rebalancing dates from optimized portfolio</span></span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>rebalance_dates <span class="ot">&lt;-</span> <span class="fu">index</span>(results_60_40<span class="sc">$</span>weights)  <span class="co"># weights_xts from your optimized portfolio</span></span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a><span class="co"># get adjusted close prices for MTUM and subset to rebalance dates</span></span>
+<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a>mtum_prices_full <span class="ot">&lt;-</span> <span class="fu">get_all_adj_close</span>(<span class="fu">list</span>(<span class="st">"MTUM"</span>), <span class="at">from =</span> start_date, <span class="at">to =</span> end_date)</span>
+<span id="cb41-6"><a href="#cb41-6" aria-hidden="true" tabindex="-1"></a>mtum_prices <span class="ot">&lt;-</span> mtum_prices_full[rebalance_dates, <span class="st">"MTUM"</span>, drop <span class="ot">=</span> <span class="cn">FALSE</span>]</span>
+<span id="cb41-7"><a href="#cb41-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-8"><a href="#cb41-8" aria-hidden="true" tabindex="-1"></a><span class="co"># weights always 1 for MTUM</span></span>
+<span id="cb41-9"><a href="#cb41-9" aria-hidden="true" tabindex="-1"></a>mtum_weights <span class="ot">&lt;-</span> <span class="fu">xts</span>(<span class="fu">matrix</span>(<span class="dv">1</span>, <span class="at">nrow=</span><span class="fu">nrow</span>(mtum_prices), <span class="at">ncol=</span><span class="dv">1</span>), <span class="at">order.by=</span><span class="fu">index</span>(mtum_prices))</span>
+<span id="cb41-10"><a href="#cb41-10" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(mtum_weights) <span class="ot">&lt;-</span> <span class="st">"MTUM"</span></span>
+<span id="cb41-11"><a href="#cb41-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-12"><a href="#cb41-12" aria-hidden="true" tabindex="-1"></a><span class="co"># DCA simulation</span></span>
+<span id="cb41-13"><a href="#cb41-13" aria-hidden="true" tabindex="-1"></a>dca_mtum <span class="ot">&lt;-</span> <span class="fu">simulate_dca</span>(mtum_prices, mtum_weights, <span class="at">inflow_amount =</span> cf, <span class="at">initial_cash =</span> <span class="dv">0</span>)</span>
+<span id="cb41-14"><a href="#cb41-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-15"><a href="#cb41-15" aria-hidden="true" tabindex="-1"></a><span class="co"># plot results</span></span>
+<span id="cb41-16"><a href="#cb41-16" aria-hidden="true" tabindex="-1"></a><span class="co"># plot(dca_mtum, main = "Portfolio Value with Dollar Cost Averaging") # , ylab = "Portfolio Value ($)")</span></span>
+<span id="cb41-17"><a href="#cb41-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-18"><a href="#cb41-18" aria-hidden="true" tabindex="-1"></a><span class="co"># manually calculate drawdowns from portfolio values</span></span>
+<span id="cb41-19"><a href="#cb41-19" aria-hidden="true" tabindex="-1"></a>drawdowns_mtum <span class="ot">&lt;-</span> <span class="fu">calculate_drawdowns</span>(dca_mtum)</span>
+<span id="cb41-20"><a href="#cb41-20" aria-hidden="true" tabindex="-1"></a><span class="co"># plot(drawdowns_mtum, main = "Drawdowns (DCA Portfolio)", ylab = "Drawdown", xlab = "Date")</span></span>
+<span id="cb41-21"><a href="#cb41-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-22"><a href="#cb41-22" aria-hidden="true" tabindex="-1"></a><span class="co"># calculate IRR (money-adjusted return)</span></span>
+<span id="cb41-23"><a href="#cb41-23" aria-hidden="true" tabindex="-1"></a>irr_mtum <span class="ot">&lt;-</span> <span class="fu">calculate_irr</span>(dca_mtum, <span class="at">monthly_contribution =</span> cf)</span>
+<span id="cb41-24"><a href="#cb41-24" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(irr_mtum)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>$monthly
 [1] 0.01153857
@@ -461,57 +425,45 @@ $annual
 <section id="vanguard-target-retirement-2025-fund" class="level3">
 <h3 class="anchored" data-anchor-id="vanguard-target-retirement-2025-fund">Vanguard Target Retirement 2025 Fund</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="co"># LUMP SUM INVESTMENT</span></span>
-<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>VTTVX_returns <span class="ot">&lt;-</span> <span class="fu">get_all_log_returns</span>(<span class="fu">list</span>(<span class="st">"VTTVX"</span>), <span class="at">from =</span> start_date, <span class="at">to =</span> end_date)</span>
-<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(VTTVX_returns)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="co"># LUMP SUM INVESTMENT</span></span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>VTTVX_returns <span class="ot">&lt;-</span> <span class="fu">get_all_log_returns</span>(<span class="fu">list</span>(<span class="st">"VTTVX"</span>), <span class="at">from =</span> start_date, <span class="at">to =</span> end_date)</span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(VTTVX_returns)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "VTTVX"</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="co"># create a weight matrix that's always 100% VTTVX</span></span>
-<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>vttvx_dates <span class="ot">&lt;-</span> <span class="fu">index</span>(VTTVX_returns)  </span>
-<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a>vttvx_weights <span class="ot">&lt;-</span> <span class="fu">xts</span>(<span class="fu">matrix</span>(<span class="dv">1</span>, <span class="at">nrow=</span><span class="fu">length</span>(vttvx_dates), <span class="at">ncol=</span><span class="dv">1</span>), <span class="at">order.by=</span>vttvx_dates)  </span>
-<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(vttvx_weights) <span class="ot">&lt;-</span> <span class="st">"VTTVX"</span>  </span>
-<span id="cb51-5"><a href="#cb51-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb51-6"><a href="#cb51-6" aria-hidden="true" tabindex="-1"></a><span class="co"># get "rebalanced" returns for consistency</span></span>
-<span id="cb51-7"><a href="#cb51-7" aria-hidden="true" tabindex="-1"></a>VTTVX_portfolio <span class="ot">&lt;-</span> <span class="fu">Return.rebalancing</span>(VTTVX_returns, vttvx_weights)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="co"># create a weight matrix that's always 100% VTTVX</span></span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>vttvx_dates <span class="ot">&lt;-</span> <span class="fu">index</span>(VTTVX_returns)  </span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>vttvx_weights <span class="ot">&lt;-</span> <span class="fu">xts</span>(<span class="fu">matrix</span>(<span class="dv">1</span>, <span class="at">nrow=</span><span class="fu">length</span>(vttvx_dates), <span class="at">ncol=</span><span class="dv">1</span>), <span class="at">order.by=</span>vttvx_dates)  </span>
+<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(vttvx_weights) <span class="ot">&lt;-</span> <span class="st">"VTTVX"</span>  </span>
+<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a><span class="co"># get "rebalanced" returns for consistency</span></span>
+<span id="cb45-7"><a href="#cb45-7" aria-hidden="true" tabindex="-1"></a>VTTVX_portfolio <span class="ot">&lt;-</span> <span class="fu">Return.rebalancing</span>(VTTVX_returns, vttvx_weights)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="co"># get the rebalancing dates from optimized portfolio</span></span>
-<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>rebalance_dates <span class="ot">&lt;-</span> <span class="fu">index</span>(results_60_40<span class="sc">$</span>weights)  <span class="co"># weights_xts from your optimized portfolio</span></span>
-<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb52-4"><a href="#cb52-4" aria-hidden="true" tabindex="-1"></a><span class="co"># get adjusted close prices for MTUM and subset to rebalance dates</span></span>
-<span id="cb52-5"><a href="#cb52-5" aria-hidden="true" tabindex="-1"></a>vttvx_prices_full <span class="ot">&lt;-</span> <span class="fu">get_all_adj_close</span>(<span class="fu">list</span>(<span class="st">"VTTVX"</span>), <span class="at">from =</span> start_date, <span class="at">to =</span> end_date)</span>
-<span id="cb52-6"><a href="#cb52-6" aria-hidden="true" tabindex="-1"></a>vttvx_prices <span class="ot">&lt;-</span> vttvx_prices_full[rebalance_dates, <span class="st">"VTTVX"</span>, drop <span class="ot">=</span> <span class="cn">FALSE</span>]</span>
-<span id="cb52-7"><a href="#cb52-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb52-8"><a href="#cb52-8" aria-hidden="true" tabindex="-1"></a><span class="co"># weights always 1 for MTUM</span></span>
-<span id="cb52-9"><a href="#cb52-9" aria-hidden="true" tabindex="-1"></a>vttvx_weights <span class="ot">&lt;-</span> <span class="fu">xts</span>(<span class="fu">matrix</span>(<span class="dv">1</span>, <span class="at">nrow=</span><span class="fu">nrow</span>(vttvx_prices), <span class="at">ncol=</span><span class="dv">1</span>), <span class="at">order.by=</span><span class="fu">index</span>(vttvx_prices))</span>
-<span id="cb52-10"><a href="#cb52-10" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(vttvx_weights) <span class="ot">&lt;-</span> <span class="st">"VTTVX"</span></span>
-<span id="cb52-11"><a href="#cb52-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb52-12"><a href="#cb52-12" aria-hidden="true" tabindex="-1"></a><span class="co"># DCA simulation</span></span>
-<span id="cb52-13"><a href="#cb52-13" aria-hidden="true" tabindex="-1"></a>dca_vttvx <span class="ot">&lt;-</span> <span class="fu">dca_portfolio_simulation</span>(vttvx_prices, vttvx_weights, <span class="at">inflow_amount =</span> cf, <span class="at">initial_cash =</span> <span class="dv">0</span>)</span>
-<span id="cb52-14"><a href="#cb52-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb52-15"><a href="#cb52-15" aria-hidden="true" tabindex="-1"></a><span class="co"># plot results</span></span>
-<span id="cb52-16"><a href="#cb52-16" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(dca_vttvx, <span class="at">main =</span> <span class="st">"Portfolio Value with Dollar Cost Averaging"</span>) <span class="co"># , ylab = "Portfolio Value ($)")</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="portfolio_sim_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="co"># manually calculate drawdowns from portfolio values</span></span>
-<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>drawdowns_vttvx <span class="ot">&lt;-</span> <span class="fu">calculate_drawdowns</span>(dca_vttvx)</span>
-<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(drawdowns_vttvx, <span class="at">main =</span> <span class="st">"Drawdowns (DCA Portfolio)"</span>, <span class="at">ylab =</span> <span class="st">"Drawdown"</span>, <span class="at">xlab =</span> <span class="st">"Date"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="portfolio_sim_files/figure-html/unnamed-chunk-14-2.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="co"># calculate IRR (money-adjusted return)</span></span>
-<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a>irr_vttvx <span class="ot">&lt;-</span> <span class="fu">calculate_irr</span>(dca_vttvx, <span class="at">monthly_contribution =</span> cf)</span>
-<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(irr_vttvx)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="co"># get the rebalancing dates from optimized portfolio</span></span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>rebalance_dates <span class="ot">&lt;-</span> <span class="fu">index</span>(results_60_40<span class="sc">$</span>weights)  <span class="co"># weights_xts from your optimized portfolio</span></span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a><span class="co"># get adjusted close prices for MTUM and subset to rebalance dates</span></span>
+<span id="cb46-5"><a href="#cb46-5" aria-hidden="true" tabindex="-1"></a>vttvx_prices_full <span class="ot">&lt;-</span> <span class="fu">get_all_adj_close</span>(<span class="fu">list</span>(<span class="st">"VTTVX"</span>), <span class="at">from =</span> start_date, <span class="at">to =</span> end_date)</span>
+<span id="cb46-6"><a href="#cb46-6" aria-hidden="true" tabindex="-1"></a>vttvx_prices <span class="ot">&lt;-</span> vttvx_prices_full[rebalance_dates, <span class="st">"VTTVX"</span>, drop <span class="ot">=</span> <span class="cn">FALSE</span>]</span>
+<span id="cb46-7"><a href="#cb46-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-8"><a href="#cb46-8" aria-hidden="true" tabindex="-1"></a><span class="co"># weights always 1 for MTUM</span></span>
+<span id="cb46-9"><a href="#cb46-9" aria-hidden="true" tabindex="-1"></a>vttvx_weights <span class="ot">&lt;-</span> <span class="fu">xts</span>(<span class="fu">matrix</span>(<span class="dv">1</span>, <span class="at">nrow=</span><span class="fu">nrow</span>(vttvx_prices), <span class="at">ncol=</span><span class="dv">1</span>), <span class="at">order.by=</span><span class="fu">index</span>(vttvx_prices))</span>
+<span id="cb46-10"><a href="#cb46-10" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(vttvx_weights) <span class="ot">&lt;-</span> <span class="st">"VTTVX"</span></span>
+<span id="cb46-11"><a href="#cb46-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-12"><a href="#cb46-12" aria-hidden="true" tabindex="-1"></a><span class="co"># DCA simulation</span></span>
+<span id="cb46-13"><a href="#cb46-13" aria-hidden="true" tabindex="-1"></a>dca_vttvx <span class="ot">&lt;-</span> <span class="fu">simulate_dca</span>(vttvx_prices, vttvx_weights, <span class="at">inflow_amount =</span> cf, <span class="at">initial_cash =</span> <span class="dv">0</span>)</span>
+<span id="cb46-14"><a href="#cb46-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-15"><a href="#cb46-15" aria-hidden="true" tabindex="-1"></a><span class="co"># plot results</span></span>
+<span id="cb46-16"><a href="#cb46-16" aria-hidden="true" tabindex="-1"></a><span class="co"># plot(dca_vttvx, main = "Portfolio Value with Dollar Cost Averaging") # , ylab = "Portfolio Value ($)")</span></span>
+<span id="cb46-17"><a href="#cb46-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-18"><a href="#cb46-18" aria-hidden="true" tabindex="-1"></a><span class="co"># manually calculate drawdowns from portfolio values</span></span>
+<span id="cb46-19"><a href="#cb46-19" aria-hidden="true" tabindex="-1"></a>drawdowns_vttvx <span class="ot">&lt;-</span> <span class="fu">calculate_drawdowns</span>(dca_vttvx)</span>
+<span id="cb46-20"><a href="#cb46-20" aria-hidden="true" tabindex="-1"></a><span class="co"># plot(drawdowns_vttvx, main = "Drawdowns (DCA Portfolio)", ylab = "Drawdown", xlab = "Date")</span></span>
+<span id="cb46-21"><a href="#cb46-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-22"><a href="#cb46-22" aria-hidden="true" tabindex="-1"></a><span class="co"># calculate IRR (money-adjusted return)</span></span>
+<span id="cb46-23"><a href="#cb46-23" aria-hidden="true" tabindex="-1"></a>irr_vttvx <span class="ot">&lt;-</span> <span class="fu">calculate_irr</span>(dca_vttvx, <span class="at">monthly_contribution =</span> cf)</span>
+<span id="cb46-24"><a href="#cb46-24" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(irr_vttvx)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>$monthly
 [1] 0.005953504
@@ -525,86 +477,86 @@ $annual
 <section id="group-portfolios-and-simulate-dca" class="level2">
 <h2 class="anchored" data-anchor-id="group-portfolios-and-simulate-dca">Group portfolios and simulate DCA</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="co"># set up plotting parameters</span></span>
-<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a>my_colors <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"black"</span>, <span class="st">"red"</span>, <span class="st">"green"</span>, <span class="st">"blue"</span>)</span>
-<span id="cb56-3"><a href="#cb56-3" aria-hidden="true" tabindex="-1"></a>my_legend <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"100% Momentum"</span>, <span class="st">"100% Equity"</span>, <span class="st">"60/40"</span>, <span class="st">"Vanguard Target 2025 Fund"</span>)</span>
-<span id="cb56-4"><a href="#cb56-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb56-5"><a href="#cb56-5" aria-hidden="true" tabindex="-1"></a><span class="co"># combine portfolio values</span></span>
-<span id="cb56-6"><a href="#cb56-6" aria-hidden="true" tabindex="-1"></a>portfolio_values <span class="ot">&lt;-</span> <span class="fu">merge</span>(dca_mtum,</span>
-<span id="cb56-7"><a href="#cb56-7" aria-hidden="true" tabindex="-1"></a>                          dca_full_equity, </span>
-<span id="cb56-8"><a href="#cb56-8" aria-hidden="true" tabindex="-1"></a>                          dca_60_40, </span>
-<span id="cb56-9"><a href="#cb56-9" aria-hidden="true" tabindex="-1"></a>                          dca_vttvx, </span>
-<span id="cb56-10"><a href="#cb56-10" aria-hidden="true" tabindex="-1"></a>                          <span class="at">all =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb56-11"><a href="#cb56-11" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(portfolio_values) <span class="ot">&lt;-</span> my_legend</span>
-<span id="cb56-12"><a href="#cb56-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb56-13"><a href="#cb56-13" aria-hidden="true" tabindex="-1"></a><span class="co"># combine drawdowns</span></span>
-<span id="cb56-14"><a href="#cb56-14" aria-hidden="true" tabindex="-1"></a>portfolio_drawdowns <span class="ot">&lt;-</span> <span class="fu">merge</span>(drawdowns_mtum, </span>
-<span id="cb56-15"><a href="#cb56-15" aria-hidden="true" tabindex="-1"></a>                             drawdowns_full_equity, </span>
-<span id="cb56-16"><a href="#cb56-16" aria-hidden="true" tabindex="-1"></a>                             drawdowns_60_40, </span>
-<span id="cb56-17"><a href="#cb56-17" aria-hidden="true" tabindex="-1"></a>                             drawdowns_vttvx, </span>
-<span id="cb56-18"><a href="#cb56-18" aria-hidden="true" tabindex="-1"></a>                             <span class="at">all =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb56-19"><a href="#cb56-19" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(portfolio_drawdowns) <span class="ot">&lt;-</span> my_legend</span>
-<span id="cb56-20"><a href="#cb56-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb56-21"><a href="#cb56-21" aria-hidden="true" tabindex="-1"></a><span class="co"># subplot layout</span></span>
-<span id="cb56-22"><a href="#cb56-22" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">1</span>), <span class="at">mar =</span> <span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">3</span>, <span class="dv">2</span>))</span>
-<span id="cb56-23"><a href="#cb56-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb56-24"><a href="#cb56-24" aria-hidden="true" tabindex="-1"></a><span class="co"># top plot: Portfolio Values</span></span>
-<span id="cb56-25"><a href="#cb56-25" aria-hidden="true" tabindex="-1"></a><span class="fu">plot.xts</span>(</span>
-<span id="cb56-26"><a href="#cb56-26" aria-hidden="true" tabindex="-1"></a>  portfolio_values,</span>
-<span id="cb56-27"><a href="#cb56-27" aria-hidden="true" tabindex="-1"></a>  <span class="at">main =</span> <span class="st">"Portfolio Value Growth Over Time"</span>,</span>
-<span id="cb56-28"><a href="#cb56-28" aria-hidden="true" tabindex="-1"></a>  <span class="co"># ylab = "Portfolio Value ($)",</span></span>
-<span id="cb56-29"><a href="#cb56-29" aria-hidden="true" tabindex="-1"></a>  <span class="at">col =</span> my_colors,</span>
-<span id="cb56-30"><a href="#cb56-30" aria-hidden="true" tabindex="-1"></a>  <span class="at">lwd =</span> <span class="dv">2</span>,</span>
-<span id="cb56-31"><a href="#cb56-31" aria-hidden="true" tabindex="-1"></a>  <span class="at">legend.loc =</span> <span class="st">"topleft"</span>,</span>
-<span id="cb56-32"><a href="#cb56-32" aria-hidden="true" tabindex="-1"></a>  <span class="at">legend.names =</span> my_legend,</span>
-<span id="cb56-33"><a href="#cb56-33" aria-hidden="true" tabindex="-1"></a>  <span class="at">major.ticks =</span> <span class="st">"years"</span>,</span>
-<span id="cb56-34"><a href="#cb56-34" aria-hidden="true" tabindex="-1"></a>  <span class="at">grid.col =</span> <span class="st">"lightgray"</span></span>
-<span id="cb56-35"><a href="#cb56-35" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb56-36"><a href="#cb56-36" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb56-37"><a href="#cb56-37" aria-hidden="true" tabindex="-1"></a><span class="co"># bottom plot: drawdowns</span></span>
-<span id="cb56-38"><a href="#cb56-38" aria-hidden="true" tabindex="-1"></a><span class="fu">plot.xts</span>(</span>
-<span id="cb56-39"><a href="#cb56-39" aria-hidden="true" tabindex="-1"></a>  portfolio_drawdowns <span class="sc">*</span> <span class="dv">100</span>,  <span class="co"># convert to percentage</span></span>
-<span id="cb56-40"><a href="#cb56-40" aria-hidden="true" tabindex="-1"></a>  <span class="at">main =</span> <span class="st">"Portfolio Drawdowns"</span>,</span>
-<span id="cb56-41"><a href="#cb56-41" aria-hidden="true" tabindex="-1"></a>  <span class="at">ylab =</span> <span class="st">"Drawdown (%)"</span>,</span>
-<span id="cb56-42"><a href="#cb56-42" aria-hidden="true" tabindex="-1"></a>  <span class="at">xlab =</span> <span class="st">"Date"</span>,</span>
-<span id="cb56-43"><a href="#cb56-43" aria-hidden="true" tabindex="-1"></a>  <span class="at">col =</span> my_colors,</span>
-<span id="cb56-44"><a href="#cb56-44" aria-hidden="true" tabindex="-1"></a>  <span class="at">lwd =</span> <span class="dv">2</span>,</span>
-<span id="cb56-45"><a href="#cb56-45" aria-hidden="true" tabindex="-1"></a>  <span class="at">legend.loc =</span> <span class="st">"bottomleft"</span>,</span>
-<span id="cb56-46"><a href="#cb56-46" aria-hidden="true" tabindex="-1"></a>  <span class="at">legend.names =</span> my_legend,</span>
-<span id="cb56-47"><a href="#cb56-47" aria-hidden="true" tabindex="-1"></a>  <span class="at">major.ticks =</span> <span class="st">"years"</span>,</span>
-<span id="cb56-48"><a href="#cb56-48" aria-hidden="true" tabindex="-1"></a>  <span class="at">grid.col =</span> <span class="st">"lightgray"</span></span>
-<span id="cb56-49"><a href="#cb56-49" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="co"># set up plotting parameters</span></span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>my_colors <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"black"</span>, <span class="st">"red"</span>, <span class="st">"green"</span>, <span class="st">"blue"</span>)</span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>my_legend <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"100% Momentum"</span>, <span class="st">"100% Equity"</span>, <span class="st">"60/40"</span>, <span class="st">"Vanguard Target 2025 Fund"</span>)</span>
+<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a><span class="co"># combine portfolio values</span></span>
+<span id="cb48-6"><a href="#cb48-6" aria-hidden="true" tabindex="-1"></a>portfolio_values <span class="ot">&lt;-</span> <span class="fu">merge</span>(dca_mtum,</span>
+<span id="cb48-7"><a href="#cb48-7" aria-hidden="true" tabindex="-1"></a>                          dca_full_equity, </span>
+<span id="cb48-8"><a href="#cb48-8" aria-hidden="true" tabindex="-1"></a>                          dca_60_40, </span>
+<span id="cb48-9"><a href="#cb48-9" aria-hidden="true" tabindex="-1"></a>                          dca_vttvx, </span>
+<span id="cb48-10"><a href="#cb48-10" aria-hidden="true" tabindex="-1"></a>                          <span class="at">all =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb48-11"><a href="#cb48-11" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(portfolio_values) <span class="ot">&lt;-</span> my_legend</span>
+<span id="cb48-12"><a href="#cb48-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-13"><a href="#cb48-13" aria-hidden="true" tabindex="-1"></a><span class="co"># combine drawdowns</span></span>
+<span id="cb48-14"><a href="#cb48-14" aria-hidden="true" tabindex="-1"></a>portfolio_drawdowns <span class="ot">&lt;-</span> <span class="fu">merge</span>(drawdowns_mtum, </span>
+<span id="cb48-15"><a href="#cb48-15" aria-hidden="true" tabindex="-1"></a>                             drawdowns_full_equity, </span>
+<span id="cb48-16"><a href="#cb48-16" aria-hidden="true" tabindex="-1"></a>                             drawdowns_60_40, </span>
+<span id="cb48-17"><a href="#cb48-17" aria-hidden="true" tabindex="-1"></a>                             drawdowns_vttvx, </span>
+<span id="cb48-18"><a href="#cb48-18" aria-hidden="true" tabindex="-1"></a>                             <span class="at">all =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb48-19"><a href="#cb48-19" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(portfolio_drawdowns) <span class="ot">&lt;-</span> my_legend</span>
+<span id="cb48-20"><a href="#cb48-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-21"><a href="#cb48-21" aria-hidden="true" tabindex="-1"></a><span class="co"># subplot layout</span></span>
+<span id="cb48-22"><a href="#cb48-22" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">1</span>), <span class="at">mar =</span> <span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">3</span>, <span class="dv">2</span>))</span>
+<span id="cb48-23"><a href="#cb48-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-24"><a href="#cb48-24" aria-hidden="true" tabindex="-1"></a><span class="co"># top plot: Portfolio Values</span></span>
+<span id="cb48-25"><a href="#cb48-25" aria-hidden="true" tabindex="-1"></a><span class="fu">plot.xts</span>(</span>
+<span id="cb48-26"><a href="#cb48-26" aria-hidden="true" tabindex="-1"></a>  portfolio_values,</span>
+<span id="cb48-27"><a href="#cb48-27" aria-hidden="true" tabindex="-1"></a>  <span class="at">main =</span> <span class="st">"Portfolio Value Growth Over Time"</span>,</span>
+<span id="cb48-28"><a href="#cb48-28" aria-hidden="true" tabindex="-1"></a>  <span class="co"># ylab = "Portfolio Value ($)",</span></span>
+<span id="cb48-29"><a href="#cb48-29" aria-hidden="true" tabindex="-1"></a>  <span class="at">col =</span> my_colors,</span>
+<span id="cb48-30"><a href="#cb48-30" aria-hidden="true" tabindex="-1"></a>  <span class="at">lwd =</span> <span class="dv">2</span>,</span>
+<span id="cb48-31"><a href="#cb48-31" aria-hidden="true" tabindex="-1"></a>  <span class="at">legend.loc =</span> <span class="st">"topleft"</span>,</span>
+<span id="cb48-32"><a href="#cb48-32" aria-hidden="true" tabindex="-1"></a>  <span class="at">legend.names =</span> my_legend,</span>
+<span id="cb48-33"><a href="#cb48-33" aria-hidden="true" tabindex="-1"></a>  <span class="at">major.ticks =</span> <span class="st">"years"</span>,</span>
+<span id="cb48-34"><a href="#cb48-34" aria-hidden="true" tabindex="-1"></a>  <span class="at">grid.col =</span> <span class="st">"lightgray"</span></span>
+<span id="cb48-35"><a href="#cb48-35" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb48-36"><a href="#cb48-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-37"><a href="#cb48-37" aria-hidden="true" tabindex="-1"></a><span class="co"># bottom plot: drawdowns</span></span>
+<span id="cb48-38"><a href="#cb48-38" aria-hidden="true" tabindex="-1"></a><span class="fu">plot.xts</span>(</span>
+<span id="cb48-39"><a href="#cb48-39" aria-hidden="true" tabindex="-1"></a>  portfolio_drawdowns <span class="sc">*</span> <span class="dv">100</span>,  <span class="co"># convert to percentage</span></span>
+<span id="cb48-40"><a href="#cb48-40" aria-hidden="true" tabindex="-1"></a>  <span class="at">main =</span> <span class="st">"Portfolio Drawdowns"</span>,</span>
+<span id="cb48-41"><a href="#cb48-41" aria-hidden="true" tabindex="-1"></a>  <span class="at">ylab =</span> <span class="st">"Drawdown (%)"</span>,</span>
+<span id="cb48-42"><a href="#cb48-42" aria-hidden="true" tabindex="-1"></a>  <span class="at">xlab =</span> <span class="st">"Date"</span>,</span>
+<span id="cb48-43"><a href="#cb48-43" aria-hidden="true" tabindex="-1"></a>  <span class="at">col =</span> my_colors,</span>
+<span id="cb48-44"><a href="#cb48-44" aria-hidden="true" tabindex="-1"></a>  <span class="at">lwd =</span> <span class="dv">2</span>,</span>
+<span id="cb48-45"><a href="#cb48-45" aria-hidden="true" tabindex="-1"></a>  <span class="at">legend.loc =</span> <span class="st">"bottomleft"</span>,</span>
+<span id="cb48-46"><a href="#cb48-46" aria-hidden="true" tabindex="-1"></a>  <span class="at">legend.names =</span> my_legend,</span>
+<span id="cb48-47"><a href="#cb48-47" aria-hidden="true" tabindex="-1"></a>  <span class="at">major.ticks =</span> <span class="st">"years"</span>,</span>
+<span id="cb48-48"><a href="#cb48-48" aria-hidden="true" tabindex="-1"></a>  <span class="at">grid.col =</span> <span class="st">"lightgray"</span></span>
+<span id="cb48-49"><a href="#cb48-49" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="portfolio_sim_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="portfolio_sim_files/figure-html/plot-dca-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="co"># reset plotting parameters</span></span>
-<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>), <span class="at">mar =</span> <span class="fu">c</span>(<span class="dv">5</span>, <span class="dv">4</span>, <span class="dv">4</span>, <span class="dv">2</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="co"># reset plotting parameters</span></span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>), <span class="at">mar =</span> <span class="fu">c</span>(<span class="dv">5</span>, <span class="dv">4</span>, <span class="dv">4</span>, <span class="dv">2</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="risk-metrics" class="level2">
-<h2 class="anchored" data-anchor-id="risk-metrics">Risk metrics</h2>
+<section id="calculate-risk-metrics" class="level2">
+<h2 class="anchored" data-anchor-id="calculate-risk-metrics">Calculate risk metrics</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="co"># compare all your strategies</span></span>
-<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a>portfolios <span class="ot">&lt;-</span> <span class="fu">list</span>(dca_60_40, dca_full_equity, dca_mtum, dca_vttvx)</span>
-<span id="cb58-3"><a href="#cb58-3" aria-hidden="true" tabindex="-1"></a>irrs <span class="ot">&lt;-</span> <span class="fu">list</span>(irr_60_40<span class="sc">$</span>annual, irr_full_equity<span class="sc">$</span>annual, irr_mtum<span class="sc">$</span>annual, irr_vttvx<span class="sc">$</span>annual)</span>
-<span id="cb58-4"><a href="#cb58-4" aria-hidden="true" tabindex="-1"></a>names <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"60/40"</span>, <span class="st">"100% Equity"</span>, <span class="st">"100% Momentum"</span>, <span class="st">"Vanguard Target 2025"</span>)</span>
-<span id="cb58-5"><a href="#cb58-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb58-6"><a href="#cb58-6" aria-hidden="true" tabindex="-1"></a>risk_table <span class="ot">&lt;-</span> <span class="fu">create_risk_comparison</span>(portfolios, irrs, names)</span>
-<span id="cb58-7"><a href="#cb58-7" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(risk_table)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="co"># compare all your strategies</span></span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>portfolios <span class="ot">&lt;-</span> <span class="fu">list</span>(dca_mtum, dca_full_equity, dca_60_40, dca_vttvx)</span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a>irrs <span class="ot">&lt;-</span> <span class="fu">list</span>(irr_mtum<span class="sc">$</span>annual, irr_full_equity<span class="sc">$</span>annual, irr_60_40<span class="sc">$</span>annual, irr_vttvx<span class="sc">$</span>annual)</span>
+<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a>names <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"100% Momentum"</span>, <span class="st">"100% Equity"</span>, <span class="st">"60/40"</span>, <span class="st">"Vanguard Target 2025"</span>)</span>
+<span id="cb50-5"><a href="#cb50-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-6"><a href="#cb50-6" aria-hidden="true" tabindex="-1"></a>risk_table <span class="ot">&lt;-</span> <span class="fu">create_risk_comparison</span>(portfolios, irrs, names)</span>
+<span id="cb50-7"><a href="#cb50-7" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(risk_table)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>              Strategy   IRR Max_Drawdown_pct Volatility_pct Modified_Sharpe
-1                60/40  7.76           -12.13          31.00           0.153
+1        100% Momentum 14.76           -21.99          33.65           0.350
 2          100% Equity 11.91           -17.94          33.10           0.269
-3        100% Momentum 14.76           -21.99          33.65           0.350
+3                60/40  7.76           -12.13          31.00           0.153
 4 Vanguard Target 2025  7.38           -11.38          31.03           0.141
   Sortino_Ratio Time_in_DD_pct Avg_DD_pct Calmar_Ratio
-1         0.698           23.9      -3.69        0.640
+1         1.099           34.9      -8.47        0.671
 2         0.860           30.3      -5.52        0.664
-3         1.099           34.9      -8.47        0.671
+3         0.698           23.9      -3.69        0.640
 4         0.680           25.7      -3.35        0.649</code></pre>
 </div>
 </div>

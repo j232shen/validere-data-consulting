@@ -1,5 +1,5 @@
 ---
-title: "EDA"
+title: "Exploratory Data Analysis: Historical Price Data"
 author: "Jane Shen"
 format: html
 editor: visual
@@ -14,7 +14,6 @@ editor: visual
 source("ETL.R")
 
 # fixed asset universe
-# SPY: large cap equity (for comparison)
 # VTI: all public U.S. stocks
 # VXUS: most non-U.S. stocks
 # BND: broad U.S. investment-grade bonds
