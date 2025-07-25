@@ -23,7 +23,7 @@ library(zoo)
 #| label: process-assets
 
 # load data retrieval and preprocessing module
-source("ETL.R")
+source("../utils/ETL.R")
 
 # fixed asset universe
 # VTI: all public U.S. stocks
@@ -50,10 +50,10 @@ colnames(clean_returns)
 #| label: simulation-setup
 
 # load optimization and DCA simulation module
-source("simulation.R")
+source("../utils/simulation.R")
 
 # load performance metrics metrics module
-source("calculate_metrics.R")
+source("../utils/calculate_metrics.R")
 
 # define monthly cash inflow
 cf = 3000 

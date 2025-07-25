@@ -11,7 +11,7 @@ editor: visual
 #| label: process-assets
 #| message: False
 
-source("ETL.R")
+source("../utils/ETL.R")
 
 # fixed asset universe
 # VTI: all public U.S. stocks
