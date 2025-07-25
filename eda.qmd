@@ -9,6 +9,7 @@ editor: visual
 
 ```{r}
 #| label: process-assets
+#| message: False
 
 source("ETL.R")
 

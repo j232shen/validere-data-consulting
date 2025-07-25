@@ -367,7 +367,7 @@ rebalance_dates <- index(results_60_40$weights)  # weights_xts from your optimiz
 
 # get adjusted close prices for MTUM and subset to rebalance dates
 mtum_prices_full <- get_all_adj_close(list("MTUM"), from = start_date, to = end_date)
-mtum_prices <- mtum_prices_full[rebalance_dates, , drop = FALSE]
+mtum_prices <- mtum_prices_full[rebalance_dates, "MTUM", drop = FALSE]
 
 # weights always 1 for MTUM
 mtum_weights <- xts(matrix(1, nrow=nrow(mtum_prices), ncol=1), order.by=index(mtum_prices))
@@ -411,7 +411,7 @@ rebalance_dates <- index(results_60_40$weights)  # weights_xts from your optimiz
 
 # get adjusted close prices for MTUM and subset to rebalance dates
 vttvx_prices_full <- get_all_adj_close(list("VTTVX"), from = start_date, to = end_date)
-vttvx_prices <- vttvx_prices_full[rebalance_dates, , drop = FALSE]
+vttvx_prices <- vttvx_prices_full[rebalance_dates, "VTTVX", drop = FALSE]
 
 # weights always 1 for MTUM
 vttvx_weights <- xts(matrix(1, nrow=nrow(vttvx_prices), ncol=1), order.by=index(vttvx_prices))
@@ -431,6 +431,36 @@ plot(drawdowns_vttvx, main = "Drawdowns (DCA Portfolio)", ylab = "Drawdown", xla
 # calculate IRR (money-adjusted return)
 irr_vttvx <- calculate_irr(dca_vttvx, monthly_contribution = cf)
 print(irr_vttvx)
+```
+
+### 100% VTI (benchmark; do we beat the market?)
+
+```{r}
+# get the rebalancing dates from optimized portfolio
+rebalance_dates <- index(results_60_40$weights)  # weights_xts from your optimized portfolio
+
+# get adjusted close prices for VTI and subset to rebalance dates
+vti_prices_full <- get_all_adj_close(list("VTI"), from = start_date, to = end_date)
+vti_prices <- vti_prices_full[rebalance_dates, "VTI", drop = FALSE]
+
+# weights always 1 for VTI
+vti_weights <- xts(matrix(1, nrow=nrow(vti_prices), ncol=1), order.by=index(vti_prices))
+colnames(vti_weights) <- "VTI"
+
+# DCA simulation
+dca_vti <- dca_portfolio_simulation(vti_prices, vti_weights, inflow_amount = cf, initial_cash = 0)
+
+# plot results
+plot(dca_vti, main = "Portfolio Value with Dollar Cost Averaging") # , ylab = "Portfolio Value ($)")
+
+# manually calculate drawdowns from portfolio values
+cummax_values <- cummax(dca_vti)
+drawdowns_vti <- (dca_vti / cummax_values) - 1
+plot(drawdowns_vti, main = "Drawdowns (DCA Portfolio)", ylab = "Drawdown", xlab = "Date")
+
+# calculate IRR (money-adjusted return)
+irr_vti <- calculate_irr(dca_vti, monthly_contribution = cf)
+print(irr_vti)
 ```
 
 ## Group portfolios and simulate
@@ -453,22 +483,22 @@ backtest.plot(grouped_returns)
 ```{r}
 # set up plotting parameters
 my_colors <- c("black", "red", "green", "blue")
-my_legend <- c("60/40", "100% Equity", "100% Momentum", "Vanguard Target 2025 Fund")
+my_legend <- c("100% Momentum", "100% Equity", "60/40", "Vanguard Target 2025 Fund")
 
 # combine portfolio values
-portfolio_values <- merge(dca_60_40, 
-                         dca_full_equity, 
-                         dca_mtum, 
-                         dca_vttvx, 
-                         all = FALSE)
+portfolio_values <- merge(dca_mtum,
+                          dca_full_equity, 
+                          dca_60_40, 
+                          dca_vttvx, 
+                          all = FALSE)
 colnames(portfolio_values) <- my_legend
 
 # combine drawdowns
-portfolio_drawdowns <- merge(drawdowns_60_40, 
-                            drawdowns_full_equity, 
-                            drawdowns_mtum, 
-                            drawdowns_vttvx, 
-                            all = FALSE)
+portfolio_drawdowns <- merge(drawdowns_mtum, 
+                             drawdowns_full_equity, 
+                             drawdowns_60_40, 
+                             drawdowns_vttvx, 
+                             all = FALSE)
 colnames(portfolio_drawdowns) <- my_legend
 
 # subplot layout
@@ -477,7 +507,7 @@ par(mfrow = c(2, 1), mar = c(3, 4, 3, 2))
 # top plot: Portfolio Values
 plot.xts(
   portfolio_values,
-  main = "DCA Portfolio Values",
+  main = "Portfolio Value Growth Over Time",
   # ylab = "Portfolio Value ($)",
   col = my_colors,
   lwd = 2,
@@ -495,6 +525,8 @@ plot.xts(
   xlab = "Date",
   col = my_colors,
   lwd = 2,
+  legend.loc = "bottomleft",
+  legend.names = my_legend,
   major.ticks = "years",
   grid.col = "lightgray"
 )
@@ -635,9 +667,9 @@ create_risk_comparison <- function(portfolio_list, irr_list, strategy_names, ris
 
 
 # compare all your strategies
-portfolios <- list(dca_60_40, dca_full_equity, dca_mtum, dca_vttvx)
-irrs <- list(irr_60_40$annual, irr_full_equity$annual, irr_mtum$annual, irr_vttvx$annual)
-names <- c("60/40", "100% Equity", "100% Momentum", "Vanguard Target 2025")
+portfolios <- list(dca_60_40, dca_full_equity, dca_mtum, dca_vttvx, dca_vti)
+irrs <- list(irr_60_40$annual, irr_full_equity$annual, irr_mtum$annual, irr_vttvx$annual, irr_vti$annual)
+names <- c("60/40", "100% Equity", "100% Momentum", "Vanguard Target 2025", "100% VTI")
 
 risk_table <- create_risk_comparison(portfolios, irrs, names)
 print(risk_table)
