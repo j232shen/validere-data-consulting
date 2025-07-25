@@ -8,13 +8,13 @@ This repository contains the analysis and recommendations developed for a take-h
   
 ## 📂 Structure
 
-| Folder / File      | Description                                      |
-|-------------------|-------------------------------------------------|
-| `preprocessing/`    | Scripts for retrieving and preprocessing data    |
-| `analysis/`         | Portfolio simulation and strategy evaluation      |
-| `slides/`           | Final presentation slides                         |
-| `utils/`            | Helper functions (e.g., IRR calculation, backtesting) |
-| `README.md`         | You're here                                       |
+| Folder / File      | Description                                     |
+|--------------------|-------------------------------------------------|
+| `preprocessing/`   | Scripts for retrieving and preprocessing data   |
+| `analysis/`        | Portfolio simulation and strategy evaluation    |
+| `slides/`          | Final results and analysis slide deck           |
+| `utils/`           | Helper functions (e.g., IRR calculation, backtesting) |
+| `README.md`        | You're here                                     |
 
 ## 🚀 How to Run
 
